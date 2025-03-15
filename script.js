@@ -1,9 +1,10 @@
-// Import the necessary functions from Firebase SDK
+// Import the functions you need from the SDKs you need
 import { initializeApp } from "firebase/app";
+import { getAnalytics } from "firebase/analytics";
+import { getFirestore, doc, getDoc, setDoc, collection, addDoc, getDocs, updateDoc } from "firebase/firestore";
 import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, signOut } from "firebase/auth";
-import { getFirestore, doc, getDoc, setDoc, addDoc, collection, query, where, getDocs } from "firebase/firestore";
 
-// Firebase configuration
+// Your web app's Firebase configuration
 const firebaseConfig = {
   apiKey: "AIzaSyCOBcZaGNGLIT-xv_YA-41bY8m62nU_Udg",
   authDomain: "tqoct-thesis.firebaseapp.com",
@@ -16,96 +17,225 @@ const firebaseConfig = {
 
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);
-const auth = getAuth(app);
-const db = getFirestore(app);
+const analytics = getAnalytics(app);
+const auth = getAuth(app); // Firebase Authentication
+const db = getFirestore(app); // Firestore
 
-// Εξασφάλιση ότι τα πεδία είναι έτοιμα να ληφθούν όταν φορτώσει η σελίδα
-document.addEventListener("DOMContentLoaded", () => {
-  const loginForm = document.getElementById("loginForm");
-  const usernameInput = document.getElementById("loginUsername");
-  const passwordInput = document.getElementById("loginPassword");
+document.addEventListener("DOMContentLoaded", function () {
+    const registerForm = document.getElementById("registerForm");
+    const loginForm = document.getElementById("loginForm");
 
-  if (loginForm) {
-    loginForm.addEventListener("submit", async (event) => {
-      event.preventDefault();
+    const adminUsername = "admin";
+    const adminPassword = "Admin123!";
 
-      const username = usernameInput.value.trim();
-      const password = passwordInput.value.trim();
-
-      // Ελέγχουμε αν τα στοιχεία ανήκουν στον admin
-      const adminDocRef = doc(db, "users", "admin");  // Η συλλογή "users" και το έγγραφο admin
-      const adminDoc = await getDoc(adminDocRef);
-
-      if (adminDoc.exists()) {
-        const adminData = adminDoc.data();
-        
-        // Ελέγχουμε αν το username και το password αντιστοιχούν στον admin
-        if (username === adminData.username && password === adminData.password) {
-          // Αν ο χρήστης είναι admin, ανακατευθύνουμε στην σελίδα του admin
-          window.location.href = "admin.html";
+    // Δημιουργία του Admin αν δεν υπάρχει ήδη στο Firestore
+    const adminDocRef = doc(db, "users", "admin");
+    getDoc(adminDocRef).then(docSnapshot => {
+        if (!docSnapshot.exists()) {
+            // Δημιουργία admin στο Firestore
+            setDoc(adminDocRef, { username: adminUsername, password: adminPassword })
+                .then(() => {
+                    console.log("Admin δημιουργήθηκε!");
+                })
+                .catch(error => {
+                    console.error("Σφάλμα κατά τη δημιουργία του Admin: ", error);
+                });
         } else {
-          // Αν δεν είναι admin, προσπαθούμε να κάνουμε login με Firebase Authentication
-          try {
-            await signInWithEmailAndPassword(auth, username + "@domain.com", password);
-            window.location.href = "instructions.html";  // Αν είναι κανονικός χρήστης, μεταβαίνουμε στις οδηγίες
-          } catch (error) {
-            alert("Λάθος όνομα χρήστη ή κωδικός πρόσβασης!");
-          }
+            console.log("Admin ήδη υπάρχει.");
         }
-      } else {
-        alert("Ο admin δεν υπάρχει στη βάση δεδομένων!");
-      }
+    }).catch(error => {
+        console.error("Σφάλμα κατά την ανάκτηση του admin: ", error);
     });
-  }
-});
 
-// Εγγραφή νέου χρήστη (για κανονικούς χρήστες)
-document.addEventListener("DOMContentLoaded", () => {
-  const registerForm = document.getElementById("registerForm");
+    // Διαχείριση Σύνδεσης
+    if (loginForm) {
+        loginForm.addEventListener("submit", function (event) {
+            event.preventDefault();
 
-  if (registerForm) {
-    registerForm.addEventListener("submit", async (event) => {
-      event.preventDefault();
+            const username = document.getElementById("loginUsername").value.trim();
+            const password = document.getElementById("loginPassword").value.trim();
 
-      const username = document.getElementById('username').value.trim();
-      const email = document.getElementById('email').value.trim();
-      const password = document.getElementById('password').value.trim();
+            // Έλεγχος για τη σύνδεση του admin από Firestore
+            const adminDocRef = doc(db, "users", "admin");
+            getDoc(adminDocRef).then(docSnapshot => {
+                if (docSnapshot.exists()) {
+                    const adminData = docSnapshot.data();
 
-      try {
-        const userCredential = await createUserWithEmailAndPassword(auth, email, password);
-        const user = userCredential.user;
+                    if (username === adminData.username && password === adminData.password) {
+                        // Admin σύνδεση (ανακατεύθυνση στο admin panel)
+                        window.location.href = "admin.html";
+                    } else {
+                        // Σύνδεση με Firebase Authentication για άλλους χρήστες
+                        signInWithEmailAndPassword(auth, username + "@domain.com", password) // Χρήση ψεύτικου email για admin
+                            .then((userCredential) => {
+                                const user = userCredential.user;
+                                window.location.href = "instructions.html";
+                            })
+                            .catch((error) => {
+                                alert("Λάθος όνομα χρήστη ή κωδικός πρόσβασης!");
+                            });
+                    }
+                }
+            }).catch(error => {
+                console.error("Σφάλμα κατά την ανάκτηση του admin: ", error);
+            });
+        });
+    }
 
-        const userDoc = {
-          username: username,
-          email: email,
-          password: password,
-          status: "Σε αναμονή" // Χρήστης σε αναμονή έγκρισης
-        };
+    // Διαχείριση Εγγραφής
+    if (registerForm) {
+        registerForm.addEventListener("submit", function (event) {
+            event.preventDefault();
+            let valid = true;
+            const inputs = registerForm.querySelectorAll("input, select");
+            const errorMessages = registerForm.querySelectorAll(".error");
 
-        // Αποθήκευση χρήστη στη βάση Firestore
-        await addDoc(collection(db, "users"), userDoc);
+            // Καθαρισμός προηγούμενων μηνυμάτων
+            errorMessages.forEach(msg => msg.remove());
 
-        alert("Η εγγραφή σας ολοκληρώθηκε με επιτυχία!");
-        registerForm.reset(); // Καθαρισμός της φόρμας
-      } catch (error) {
-        alert("Σφάλμα κατά την εγγραφή: " + error.message);
-      }
-    });
-  }
-});
+            // Έλεγχος για κενά πεδία
+            inputs.forEach(input => {
+                if (input.value.trim() === "") {
+                    valid = false;
+                    showError(input, "Αυτό το πεδίο είναι υποχρεωτικό.");
+                }
+            });
 
-// Διαχείριση Αποσύνδεσης
-document.addEventListener("DOMContentLoaded", () => {
-  const logoutButton = document.getElementById("logoutButton");
+            // Έλεγχος ισχυρότητας κωδικού πρόσβασης
+            const passwordField = registerForm.querySelector("input[type='password']");
+            if (passwordField && !validatePassword(passwordField.value)) {
+                valid = false;
+                showError(passwordField, "Ο κωδικός πρέπει να έχει τουλάχιστον 8 χαρακτήρες, ένα κεφαλαίο γράμμα, έναν αριθμό και ένα ειδικό σύμβολο.");
+            }
 
-  if (logoutButton) {
-    logoutButton.addEventListener("click", async () => {
-      try {
-        await signOut(auth);
-        window.location.href = "index.html";  // Επιστροφή στην αρχική σελίδα μετά την αποσύνδεση
-      } catch (error) {
-        console.error("Σφάλμα κατά την αποσύνδεση: ", error);
-      }
-    });
-  }
+            if (!valid) {
+                return;
+            }
+
+            // Δημιουργία του χρήστη
+            const user = {
+                username: document.getElementById('username').value.trim(),
+                email: document.getElementById('email').value.trim(),
+                password: document.getElementById('password').value.trim(),
+                gender: document.getElementById('gender').value,
+                age: document.getElementById('age').value,
+                education: document.getElementById('education').value,
+                experience: document.getElementById('experience').value,
+                organizationName: document.getElementById('organizationName').value.trim(),
+                organizationType: document.getElementById('organizationType').value,
+                location: document.getElementById('location').value,
+                role: document.getElementById('role').value,
+                usageYears: document.getElementById('usageYears').value,
+                serviceName: document.getElementById('serviceName').value.trim(),
+                status: "Σε αναμονή"  // Νέο σημείο: Ορίζουμε την αρχική κατάσταση ως "Pending"
+            };
+
+            // Δημιουργία χρήστη με Firebase Authentication
+            createUserWithEmailAndPassword(auth, user.email + "@domain.com", user.password) // Προσθήκη του "@domain.com"
+                .then((userCredential) => {
+                    const userAuth = userCredential.user;
+
+                    // Αποθήκευση του χρήστη στη βάση δεδομένων Firestore
+                    addDoc(collection(db, "users"), user)
+                        .then(() => {
+                            alert("Η εγγραφή σας καταχωρήθηκε! Περιμένετε έγκριση από τον διαχειριστή.");
+                            registerForm.reset();  // Καθαρίζουμε τη φόρμα
+                        })
+                        .catch((error) => {
+                            console.error("Σφάλμα κατά την αποθήκευση του χρήστη: ", error);
+                            alert("Σφάλμα κατά την αποθήκευση του χρήστη στο Firestore.");
+                        });
+                })
+                .catch((error) => {
+                    console.error("Σφάλμα κατά τη δημιουργία χρήστη: ", error);
+                    alert(error.message);  // Προβολή πιο συγκεκριμένου σφάλματος
+                });
+        });
+    }
+
+    // Συνάρτηση για εμφάνιση σφαλμάτων
+    function showError(element, message) {
+        const error = document.createElement("div");
+        error.className = "error";
+        error.style.color = "red";
+        error.style.fontSize = "14px";
+        error.style.marginTop = "5px";
+        error.innerText = message;
+        element.parentNode.appendChild(error);
+    }
+
+    // Συνάρτηση για έλεγχο ισχυρού κωδικού πρόσβασης
+    function validatePassword(password) {
+        const re = /^(?=.*[A-Z])(?=.*\d)(?=.*[\W_]).{8,}$/;
+        return re.test(password);
+    }
+
+    // Διαχείριση Αποσύνδεσης
+    const logoutButton = document.getElementById("logoutButton");
+    if (logoutButton) {
+        logoutButton.addEventListener("click", function () {
+            signOut(auth).then(() => {
+                window.location.href = "index.html";
+            }).catch((error) => {
+                console.error("Σφάλμα κατά την αποσύνδεση: ", error);
+            });
+        });
+    }
+
+    // Φόρτωμα χρηστών στο Admin Panel (Firebase Firestore)
+    function loadUsers() {
+        getDocs(collection(db, "users")).then((querySnapshot) => {
+            const userListContainer = document.getElementById("users");
+            userListContainer.innerHTML = "";  // Καθαρίζουμε τα προηγούμενα δεδομένα
+
+            if (querySnapshot.empty) {
+                userListContainer.innerHTML = "<tr><td colspan='4'>Δεν υπάρχουν χρήστες προς έγκριση.</td></tr>";
+            }
+
+            querySnapshot.forEach((doc, index) => {
+                const user = doc.data();
+                const isDisabled = user.status === "approved" || user.status === "rejected";
+                const row = document.createElement("tr");
+                row.innerHTML = `    
+                    <td>${user.username}</td>
+                    <td>${user.email}</td>
+                    <td>${user.status || "Σε αναμονή"}</td>
+                    <td>
+                        <button class="approve" id="approve-${index}" onclick="approveUser('${doc.id}')" ${isDisabled ? "disabled" : ""}>Έγκριση</button>
+                        <button class="reject" id="reject-${index}" onclick="rejectUser('${doc.id}')" ${isDisabled ? "disabled" : ""}>Απόρριψη</button>
+                    </td>
+                `;
+                userListContainer.appendChild(row);
+            });
+        }).catch(error => {
+            console.error("Σφάλμα κατά τη φόρτωση των χρηστών: ", error);
+        });
+    }
+
+    loadUsers();
+
+    // Έγκριση χρήστη
+    function approveUser(userId) {
+        updateDoc(doc(db, "users", userId), { status: "approved" })
+            .then(() => {
+                alert("Ο χρήστης εγκρίθηκε!");
+                loadUsers();
+            }).catch((error) => {
+                console.error("Σφάλμα κατά την έγκριση χρήστη: ", error);
+            });
+    }
+
+    // Απόρριψη χρήστη
+    function rejectUser(userId) {
+        updateDoc(doc(db, "users", userId), { status: "rejected" })
+            .then(() => {
+                alert("Ο χρήστης απορρίφθηκε!");
+                loadUsers();
+            }).catch((error) => {
+                console.error("Σφάλμα κατά την απόρριψη χρήστη: ", error);
+            });
+    }
+
+    window.approveUser = approveUser;
+    window.rejectUser = rejectUser;
 });
