@@ -29,10 +29,10 @@ document.addEventListener("DOMContentLoaded", function () {
 
     // Δημιουργία του Admin αν δεν υπάρχει ήδη στο Firestore
     const adminDocRef = doc(db, "admins", "admin");
-    getDocs(adminDocRef).then(docSnapshot => {
+    getDoc(adminDocRef).then(docSnapshot => {
         if (!docSnapshot.exists()) {
             // Δημιουργία admin στο Firestore
-            addDoc(collection(db, "admins"), { username: adminUsername, password: adminPassword })
+            setDoc(collection(db, "admins"), { username: adminUsername, password: adminPassword })
                 .then(() => {
                     console.log("Admin δημιουργήθηκε!");
                 })
