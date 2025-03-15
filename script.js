@@ -1,10 +1,10 @@
-// Import the functions you need from the SDKs you need
+// Import the necessary functions from Firebase SDK
 import { initializeApp } from "firebase/app";
 import { getAnalytics } from "firebase/analytics";
 import { getFirestore, doc, getDoc, setDoc, collection, addDoc, getDocs, updateDoc } from "firebase/firestore";
 import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, signOut } from "firebase/auth";
 
-// Your web app's Firebase configuration
+// Firebase configuration
 const firebaseConfig = {
   apiKey: "AIzaSyCOBcZaGNGLIT-xv_YA-41bY8m62nU_Udg",
   authDomain: "tqoct-thesis.firebaseapp.com",
@@ -18,34 +18,16 @@ const firebaseConfig = {
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);
 const analytics = getAnalytics(app);
-const auth = getAuth(app); // Firebase Authentication
-const db = getFirestore(app); // Firestore
+const auth = getAuth(app);  // Firebase Authentication
+const db = getFirestore(app); // Firestore Database
 
 document.addEventListener("DOMContentLoaded", function () {
-    const registerForm = document.getElementById("registerForm");
     const loginForm = document.getElementById("loginForm");
 
-    const adminUsername = "admin";
-    const adminPassword = "Admin123!";
+    const adminUsername = "admin";  // Το όνομα χρήστη για τον admin
+    const adminPassword = "Admin123!"; // Ο κωδικός πρόσβασης για τον admin
 
-    // Δημιουργία του Admin αν δεν υπάρχει ήδη στο Firestore
-    const adminDocRef = doc(db, "users", "admin");
-    getDoc(adminDocRef).then(docSnapshot => {
-        if (!docSnapshot.exists()) {
-            // Δημιουργία admin στο Firestore
-            setDoc(adminDocRef, { username: adminUsername, password: adminPassword })
-                .then(() => {
-                    console.log("Admin δημιουργήθηκε!");
-                })
-                .catch(error => {
-                    console.error("Σφάλμα κατά τη δημιουργία του Admin: ", error);
-                });
-        }
-    }).catch(error => {
-        console.error("Σφάλμα κατά την ανάκτηση του admin: ", error);
-    });
-
-    // Διαχείριση Σύνδεσης
+    // Συνάρτηση για τη σύνδεση
     if (loginForm) {
         loginForm.addEventListener("submit", function (event) {
             event.preventDefault();
@@ -53,17 +35,18 @@ document.addEventListener("DOMContentLoaded", function () {
             const username = document.getElementById("loginUsername").value.trim();
             const password = document.getElementById("loginPassword").value.trim();
 
-            // Έλεγχος για τη σύνδεση του admin από Firestore
+            // Ελέγχουμε αν τα στοιχεία ανήκουν στον admin
             const adminDocRef = doc(db, "users", "admin");
             getDoc(adminDocRef).then(docSnapshot => {
                 if (docSnapshot.exists()) {
                     const adminData = docSnapshot.data();
 
+                    // Αν τα στοιχεία του χρήστη είναι ίδια με του admin, ανακατευθύνουμε στο admin panel
                     if (username === adminData.username && password === adminData.password) {
-                        // Admin σύνδεση (ανακατεύθυνση στο admin panel)
+                        // Συνδεόμαστε ως admin και ανακατευθύνουμε στο admin panel
                         window.location.href = "admin.html";
                     } else {
-                        // Σύνδεση με Firebase Authentication για άλλους χρήστες
+                        // Αν ο χρήστης δεν είναι admin, προσπαθούμε να συνδεθούμε μέσω Firebase Authentication
                         signInWithEmailAndPassword(auth, username + "@domain.com", password)
                             .then((userCredential) => {
                                 const user = userCredential.user;
@@ -83,15 +66,18 @@ document.addEventListener("DOMContentLoaded", function () {
         });
     }
 
-    // Διαχείριση Εγγραφής
+    // Συνάρτηση για την εγγραφή νέου χρήστη
+    const registerForm = document.getElementById("registerForm");
+
     if (registerForm) {
         registerForm.addEventListener("submit", function (event) {
             event.preventDefault();
+
             let valid = true;
             const inputs = registerForm.querySelectorAll("input, select");
             const errorMessages = registerForm.querySelectorAll(".error");
 
-            // Καθαρισμός προηγούμενων μηνυμάτων
+            // Καθαρισμός των προηγούμενων μηνυμάτων
             errorMessages.forEach(msg => msg.remove());
 
             // Έλεγχος για κενά πεδία
@@ -102,7 +88,7 @@ document.addEventListener("DOMContentLoaded", function () {
                 }
             });
 
-            // Έλεγχος ισχυρότητας κωδικού πρόσβασης
+            // Έλεγχος ισχυρού κωδικού πρόσβασης
             const passwordField = registerForm.querySelector("input[type='password']");
             if (passwordField && !validatePassword(passwordField.value)) {
                 valid = false;
@@ -113,7 +99,7 @@ document.addEventListener("DOMContentLoaded", function () {
                 return;
             }
 
-            // Δημιουργία του χρήστη
+            // Δημιουργία χρήστη στο Firestore
             const user = {
                 username: document.getElementById('username').value.trim(),
                 email: document.getElementById('email').value.trim(),
@@ -128,9 +114,7 @@ document.addEventListener("DOMContentLoaded", function () {
                 role: document.getElementById('role').value,
                 usageYears: document.getElementById('usageYears').value,
                 serviceName: document.getElementById('serviceName').value.trim(),
-
-                // Προσθήκη του πεδίου "status" με τιμή "Σε αναμονή"
-                status: "Σε αναμονή"  // Νέο σημείο: Ορίζουμε την αρχική κατάσταση ως "Pending"
+                status: "Σε αναμονή"  // Κατάσταση χρήστη ως "Σε αναμονή"
             };
 
             // Δημιουργία χρήστη με Firebase Authentication
@@ -142,7 +126,7 @@ document.addEventListener("DOMContentLoaded", function () {
                     addDoc(collection(db, "users"), user)
                         .then(() => {
                             alert("Η εγγραφή σας καταχωρήθηκε! Περιμένετε έγκριση από τον διαχειριστή.");
-                            registerForm.reset();  // Καθαρίζουμε τη φόρμα
+                            registerForm.reset();
                         })
                         .catch((error) => {
                             console.error("Σφάλμα κατά την αποθήκευση του χρήστη: ", error);
@@ -151,7 +135,7 @@ document.addEventListener("DOMContentLoaded", function () {
                 })
                 .catch((error) => {
                     console.error("Σφάλμα κατά τη δημιουργία χρήστη: ", error);
-                    alert(error.message);  // Προβολή πιο συγκεκριμένου σφάλματος
+                    alert(error.message);
                 });
         });
     }
@@ -183,55 +167,5 @@ document.addEventListener("DOMContentLoaded", function () {
                 console.error("Σφάλμα κατά την αποσύνδεση: ", error);
             });
         });
-    }
-
-    // Φόρτωμα χρηστών στο Admin Panel (Firebase Firestore)
-    function loadUsers() {
-        getDocs(collection(db, "users")).then((querySnapshot) => {
-            const userListContainer = document.getElementById("users");
-            userListContainer.innerHTML = "";  // Καθαρίζουμε τα προηγούμενα δεδομένα
-
-            if (querySnapshot.empty) {
-                userListContainer.innerHTML = "<tr><td colspan='4'>Δεν υπάρχουν χρήστες προς έγκριση.</td></tr>";
-            }
-
-            querySnapshot.forEach((doc, index) => {
-                const user = doc.data();
-                const isDisabled = user.status === "approved" || user.status === "rejected";
-                const row = document.createElement("tr");
-                row.innerHTML = `
-                    <td>${user.username}</td>
-                    <td>${user.email}</td>
-                    <td>${user.status || "Σε αναμονή"}</td>
-                    <td>
-                        <button class="approve-btn" ${isDisabled ? "disabled" : ""}>Έγκριση</button>
-                        <button class="reject-btn" ${isDisabled ? "disabled" : ""}>Αρνηση</button>
-                    </td>
-                `;
-                userListContainer.appendChild(row);
-
-                // Έγκριση ή απόρριψη
-                row.querySelector(".approve-btn").addEventListener("click", () => updateStatus(doc.id, "approved"));
-                row.querySelector(".reject-btn").addEventListener("click", () => updateStatus(doc.id, "rejected"));
-            });
-        });
-    }
-
-    // Ενημέρωση κατάστασης χρήστη
-    function updateStatus(userId, status) {
-        const userRef = doc(db, "users", userId);
-        updateDoc(userRef, { status })
-            .then(() => {
-                console.log(`Κατάσταση χρήστη ενημερώθηκε σε: ${status}`);
-                loadUsers();  // Επαναφόρτωση χρηστών
-            })
-            .catch((error) => {
-                console.error("Σφάλμα κατά την ενημέρωση κατάστασης: ", error);
-            });
-    }
-
-    // Φορτώνουμε τους χρήστες στην αρχή
-    if (document.getElementById("adminPage")) {
-        loadUsers();
     }
 });
