@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="el">
+<head>
+    <meta charset="UTF-8">
+    <title>ΕΓΓΡΑΦΗ ΧΡΗΣΤΗ</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="form-container">
+        <h2>Εγγραφή</h2>
+        <form id="registerForm">
+            <input type="text" id="username" placeholder="Όνομα Χρήστη" required>
+            <input type="email" id="email" placeholder="Ηλ. Διεύθυνση" required>
+            <input type="password" id="password" placeholder="Κωδικός" required>
+            
+            <select id="gender" required>
+                <option value="" disabled selected>Φύλο</option>
+                <option value="male">Άντρας</option>
+                <option value="female">Γυναίκα</option>
+                <option value="other">Άλλο</option>
+            </select>
+
+            <select id="age" required>
+                <option value="" disabled selected>Ηλικία</option>
+                <option value="<18">&lt;18</option>
+                <option value="18-30">18 - 30</option>
+                <option value="30-40">30 - 40</option>
+                <option value="40-50">40 - 50</option>
+                <option value="50-60">50 - 60</option>
+                <option value=">65">&gt;65</option>
+            </select>
+
+            <select id="education" required>
+                <option value="" disabled selected>Μορφωτικό Επίπεδο</option>
+                <option value="secondary">Δευτεροβάθμια Εκπαίδευση</option>
+                <option value="tertiary">Τριτόβαθμια Εκπαίδευση</option>
+                <option value="postgraduate">Μεταπτυχιακές - Διδακτορικές Σπουδές</option>
+            </select>
+
+            <select id="experience" required>
+                <option value="" disabled selected>Έτη Ανασχόλησης με Τηλε-υγεία</option>
+                <option value="0-2">0 - 2</option>
+                <option value="3-5">3 - 5</option>
+                <option value="6-10">6 - 10</option>
+                <option value="11-15">11 - 15</option>
+                <option value="16-25">16 - 25</option>
+                <option value=">26">&gt;26</option>
+            </select>
+
+            <input type="text" id="organizationName" placeholder="Ονομασία Οργανισμού" required>
+
+            <select id="organizationType" required>
+                <option value="" disabled selected>Τύπος Οργανισμού</option>
+                <option value="public">Δημόσιος</option>
+                <option value="private">Ιδιωτικός</option>
+            </select>
+
+            <select id="location" required>
+                <option value="" disabled selected>Τοποθεσία Οργανισμού</option>
+                <option value="urban">Αστική Περιοχή</option>
+                <option value="rural">Περιοχή Εκτός Αστικού Ιστού</option>
+            </select>
+
+            <select id="role" required>
+                <option value="" disabled selected>Ρόλος στον Οργανισμό</option>
+                <option value="qualityManager">Επικεφαλής Ποιότητας</option>
+                <option value="medicalDirector">Διευθυντής Ιατρικής Υπηρεσίας</option>
+                <option value="nursingDirector">Διευθυντής Νοσηλευτικής Υπηρεσίας</option>
+                <option value="telehealthManager">Επικεφαλής Τηλε-υγείας</option>
+                <option value="financialDirector">Οικονομικός Διευθυντής</option>
+                <option value="itManager">Επικεφαλής Πληροφορικής</option>
+                <option value="dataProtectionOfficer">Υπεύθυνος Προστασίας Δεδομένων</option>
+                <option value="patientRep">Εκπρόσωπος Ασθενών</option>
+                <option value="healthcareProvider">Βασικός Πάροχος Τηλε-υγείας</option>
+                <option value="externalHealthcarePro">Εξωτερικός Επαγγελματίας Υγείας</option>
+                <option value="other">Άλλο</option>
+            </select>
+
+            <select id="usageYears" required>
+                <option value="" disabled selected>Έτη Χρήσης Υπηρεσιών Τηλε-υγείας από τον Οργανισμό</option>
+                <option value="1-3">1 - 3</option>
+                <option value="4-6">4 - 6</option>
+                <option value="7-10">7 - 10</option>
+                <option value=">11">&gt;11</option>
+            </select>
+
+            <input type="text" id="serviceName" placeholder="Ονομασία Υπηρεσίας" required>
+
+            <button type="submit">Εγγραφή</button>
+        </form>
+
+        <p class="switch-page">
+            Έχετε ήδη λογαριασμό;
+            <a href="login.html">Συνδεθείτε εδώ</a>
+        </p>
+    </div>
+    <!-- Προσθήκη του Firebase SDK -->
+    <script type="module" src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js"></script>
+    <script type="module" src="https://www.gstatic.com/firebasejs/9.6.1/firebase-auth.js"></script>
+    <script type="module" src="https://www.gstatic.com/firebasejs/9.6.1/firebase-database.js"></script>    
+    <script src="script.js"></script>
+</body>
+</html>

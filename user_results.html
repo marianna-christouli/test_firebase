@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="el">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Τελικό Σκορ και Απαντήσεις</title>
+    <script src="script.js"></script>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <div class="navbar">
+            <div class="logo">Τελικό Σκορ και Απαντήσεις</div>
+            <div class="nav-links">
+                <a href="#" id="logoutButton" class="btn">Αποσύνδεση</a>
+            </div>
+        </div>
+        
+        <h1>Τελικό Σκορ</h1>
+        
+        <p id="totalScore"></p>
+        
+        <h2>Αναλυτικές Απαντήσεις</h2>
+        
+        <div id="answersDisplay"></div>
+
+        <div class="export-buttons">
+            <button onclick="exportToCSV()">Εξαγωγή σε CSV</button>
+            <button onclick="exportToPDF()">Εξαγωγή σε PDF</button>
+        </div>
+    </div>
+
+<!--    <script>
+        window.onload = function() {
+            // Ανάκτηση του συνολικού σκορ από το localStorage
+            const totalScore = parseInt(localStorage.getItem('score1')) + parseInt(localStorage.getItem('score2')) + parseInt(localStorage.getItem('score3'));
+            document.getElementById('totalScore').innerText = "Το συνολικό σκορ σας είναι: " + totalScore;
+
+            // Εμφάνιση των αναλυτικών απαντήσεων
+            const answersDisplay = document.getElementById('answersDisplay');
+            let allAnswersHTML = '';
+            
+            for (let i = 1; i <= 3; i++) {
+                const answers = JSON.parse(localStorage.getItem(`answers${i}`)) || [];
+                allAnswersHTML += `<h3>Ερωτηματολόγιο ${i}</h3><ul>`;
+                answers.forEach(answer => {
+                    allAnswersHTML += `<li>Απάντηση: ${answer}</li>`;
+                });
+                allAnswersHTML += '</ul>';
+            }
+
+            answersDisplay.innerHTML = allAnswersHTML;
+        };
+    </script>--> 
+    <script>
+        window.onload = function() {
+            // Ελέγχουμε αν υπάρχει ενεργός χρήστης
+            firebase.auth().onAuthStateChanged(function(user) {
+                if (!user) {
+                    alert("Δεν υπάρχει ενεργός χρήστης! Παρακαλώ συνδεθείτε.");
+                    window.location.href = "index.html"; // Αν δεν υπάρχει χρήστης, επιστροφή στη σελίδα login
+                    return;
+                }
+        
+                // Αν ο χρήστης είναι συνδεδεμένος, ανακτούμε τα δεδομένα του από το Firebase
+                const username = user.email; // Χρησιμοποιούμε το email του χρήστη ως όνομα χρήστη
+        
+                // Ανάκτηση του συνολικού σκορ του χρήστη από το Firebase
+                const userScoresRef = firebase.database().ref('user_scores/' + username);
+                userScoresRef.once('value', function(snapshot) {
+                    const userScores = snapshot.val() || {};
+        
+                    // Υπολογισμός του συνολικού σκορ
+                    const totalScore = (parseInt(userScores.score1) || 0) + (parseInt(userScores.score2) || 0) + (parseInt(userScores.score3) || 0);
+                    document.getElementById('totalScore').innerText = "Το συνολικό σκορ σας είναι: " + totalScore;
+                });
+        
+                // Ανάκτηση των απαντήσεων του χρήστη από το Firebase
+                const userAnswersRef = firebase.database().ref('user_answers/' + username);
+                userAnswersRef.once('value', function(snapshot) {
+                    const userAnswers = snapshot.val() || [];
+                    const answersDisplay = document.getElementById('answersDisplay');
+                    let allAnswersHTML = '';
+        
+                    // Δημιουργούμε την HTML με τις απαντήσεις
+                    for (let i = 1; i <= 3; i++) {
+                        const answers = userAnswers[`answers${i}`] || [];
+                        allAnswersHTML += `<h3>Ερωτηματολόγιο ${i}</h3><ul>`;
+                        answers.forEach(answer => {
+                            allAnswersHTML += `<li>Απάντηση: ${answer}</li>`;
+                        });
+                        allAnswersHTML += '</ul>';
+                    }
+        
+                    answersDisplay.innerHTML = allAnswersHTML;
+                });
+            });
+        };
+        </script>   
+    <!-- Προσθήκη του Firebase SDK -->
+    <script type="module" src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js"></script>
+    <script type="module" src="https://www.gstatic.com/firebasejs/9.6.1/firebase-auth.js"></script>
+    <script type="module" src="https://www.gstatic.com/firebasejs/9.6.1/firebase-database.js"></script>    
+    <script src="script.js"></script>
+</body>
+</html>

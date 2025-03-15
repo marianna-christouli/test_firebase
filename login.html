@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="el">
+<head>
+    <meta charset="UTF-8">
+    <title>ΣΥΝΔΕΣΗ ΧΡΗΣΤΗ</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="form-container">
+        <h2>Σύνδεση</h2>
+
+        <form id="loginForm">
+            <input type="text" id="loginUsername" name="loginUsername" placeholder="Όνομα Χρήστη" required>
+            <input type="password" id="loginPassword" name="loginPassword" placeholder="Κωδικός" required>
+            <button type="submit">Σύνδεση</button>
+        </form>
+
+        <p class="switch-page">
+            Δεν έχετε λογαριασμό; <a href="register.html">Εγγραφείτε εδώ</a>
+        </p>
+    </div>
+    <script src="script.js"></script>
+    <!-- Προσθήκη του Firebase SDK -->
+    <script type="module" src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js"></script>
+    <script type="module" src="https://www.gstatic.com/firebasejs/9.6.1/firebase-auth.js"></script>
+    <script type="module" src="https://www.gstatic.com/firebasejs/9.6.1/firebase-database.js"></script>    
+</body>
+</html>

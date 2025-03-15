@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="el">
+<head>
+    <meta charset="UTF-8">
+    <title>ΠΙΝΑΚΑΣ ΔΙΑΧΕΙΡΙΣΗΣ</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <div class="navbar">
+            <div class="logo">Διαχείρηση Χρηστών</div>
+            <div class="nav-links">
+                <a href="responses.html" class="btn">Απαντήσεις</a>
+                <a href="#" id="logoutButton" class="btn">Αποσύνδεση</a>
+            </div>
+        </div>
+
+        <div class="purpose">
+            <h3>Διαχείριση Χρηστών</h3>
+            <p>Εδώ μπορείτε να εγκρίνετε ή να απορρίπτετε χρήστες και να δείτε τις απαντήσεις τους.</p>
+
+            <table id="usersTable" class="table">
+                <thead>
+                    <tr>
+                        <th>Όνομα Χρήστη</th>
+                        <th>Email</th>
+                        <th>Κατάσταση</th>
+                        <th>Ενέργεια</th>
+                    </tr>
+                </thead>
+                <tbody id="users">
+                    <!-- Οι χρήστες θα προστεθούν εδώ με JavaScript -->
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+    <!-- Προσθήκη του Firebase SDK -->
+    <script type="module" src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js"></script>
+    <script type="module" src="https://www.gstatic.com/firebasejs/9.6.1/firebase-auth.js"></script>
+    <script type="module" src="https://www.gstatic.com/firebasejs/9.6.1/firebase-database.js"></script>    
+</body>
+</html>

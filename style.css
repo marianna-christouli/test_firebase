@@ -1,0 +1,548 @@
+/* Import Google Fonts (αν επιθυμείς να χρησιμοποιήσεις τη γραμματοσειρά Roboto) 
+@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap');
+*/
+
+/* Variables and Global Styles */
+:root {
+    --dark-blue: #1C3D5A;       /* Ενα πιο βαθύ μπλε για κύρια στοιχεία */
+    --light-blue: #3F7CAC;      /* Ενα πιο απαλό μπλε για hover/δευτερεύοντα στοιχεία */
+    --off-white: #F7F7F7;       /* Καθαρό φόντο */
+    --beige: #F2E8C9;           /* Απαλό μπεζ για ελαφρές επιφάνειες */
+    --dark-beige: #8C7B75;      /* Σκούρο μπεζ για κείμενα ή λεπτομέρειες */
+    --font-family: 'Roboto', Arial, sans-serif;
+    --transition: 0.3s;
+    --border-radius: 8px;
+    --box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+body {
+    margin: 0;
+    padding: 0;
+    background-color: var(--off-white);
+    color: var(--dark-blue);
+    font-family: var(--font-family);
+    -webkit-font-smoothing: antialiased;
+}
+
+/* Reset */
+* {
+    box-sizing: border-box;
+}
+
+/* Navbar */
+.navbar {
+    width: 100%;
+    padding: 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: var(--dark-blue);
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 1000;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.15);
+}
+
+.logo {
+    color: var(--off-white);
+    font-size: 24px;
+    font-weight: bold;
+    letter-spacing: 1px;
+}
+
+.nav-links .btn {
+    color: var(--off-white);
+    text-decoration: none;
+    padding: 10px 20px;
+    background: var(--light-blue);
+    border-radius: var(--border-radius);
+    transition: background-color var(--transition);
+}
+
+.nav-links .btn:hover {
+    background: var(--dark-blue);
+}
+
+/* Container */
+.container {
+    width: 100%;
+    min-height: 100vh;
+    background-color: var(--off-white);
+    display: flex;
+    flex-direction: column;
+    padding: 20px;
+    padding-top: 120px; /* Space for fixed navbar */
+}
+
+/* Hero Section */
+.hero {
+    margin-top: 30px;
+    margin-left: auto;
+    margin-right: auto;
+    max-width: 600px;
+}
+
+.hero h2 {
+    font-size: 32px;
+    color: var(--dark-blue);
+    margin-bottom: 10px;
+    text-shadow: 1px 1px 2px rgba(0,0,0,0.1);
+}
+
+.hero p {
+    font-size: 18px;
+    color: var(--dark-beige);
+    margin-bottom: 30px;
+}
+
+/* Primary Button */
+.btn.primary {
+    background: var(--light-blue);
+    color: white;
+    padding: 12px 20px;
+    text-decoration: none;
+    border-radius: var(--border-radius);
+    transition: background-color var(--transition), transform var(--transition);
+    display: inline-block;
+}
+
+.btn.primary:hover {
+    background: var(--dark-blue);
+    transform: translateY(-2px);
+}
+
+/* Purpose Section (Card) */
+.purpose {
+    max-width: 800px;
+    background: var(--beige);
+    padding: 30px;
+    margin: 20px auto;
+    border-radius: var(--border-radius);
+    box-shadow: var(--box-shadow);
+}
+
+.purpose h3 {
+    font-size: 24px;
+    color: var(--dark-blue);
+    margin-bottom: 15px;
+}
+
+.purpose p {
+    font-size: 18px;
+    color: var(--dark-blue);
+    line-height: 1.6;
+}
+
+/* Form Container */
+.form-container {
+    background-color: var(--beige);
+    width: 100%;
+    max-width: 500px;
+    margin: 80px auto; 
+    padding: 40px;
+    border-radius: var(--border-radius);
+    box-shadow: var(--box-shadow);
+}
+
+.form-container h2 {
+    font-size: 28px;
+    color: var(--dark-blue);
+    margin-bottom: 20px;
+}
+
+/* Form Elements */
+input, select {
+    width: 100%;
+    padding: 12px;
+    margin: 10px 0;
+    border-radius: var(--border-radius);
+    border: 1px solid var(--light-blue);
+    font-size: 16px;
+    color: var(--dark-blue);
+    background-color: var(--off-white);
+    transition: border-color var(--transition);
+}
+
+input:focus, select:focus {
+    border-color: var(--dark-blue);
+    outline: none;
+}
+
+/* Button Styles */
+button {
+    width: 100%;
+    padding: 12px;
+    background-color: var(--light-blue);
+    color: white;
+    border: none;
+    border-radius: var(--border-radius);
+    font-size: 18px;
+    cursor: pointer;
+    transition: background-color var(--transition), transform var(--transition);
+}
+
+button:hover {
+    background-color: var(--dark-blue);
+    transform: translateY(-2px);
+}
+
+button:disabled {
+    background-color: #ddd;
+    cursor: not-allowed;
+}
+
+/* Switch Page Link */
+.switch-page {
+    font-size: 14px;
+    margin-top: 20px;
+    color: var(--dark-blue);
+    text-align: center;
+}
+
+.switch-page a {
+    color: var(--light-blue);
+    text-decoration: none;
+    transition: text-decoration var(--transition);
+}
+
+.switch-page a:hover {
+    text-decoration: underline;
+}
+
+/* Responsive adjustments for larger screens */
+@media (min-width: 768px) {
+    .form-container {
+        padding: 50px;
+    }
+    .form-container h2 {
+        font-size: 32px;
+    }
+    button {
+        font-size: 20px;
+    }
+}
+
+/* Admin Panel Table */
+.table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 30px;
+    background-color: var(--off-white);
+    border-radius: var(--border-radius);
+    box-shadow: var(--box-shadow);
+}
+
+.table th, .table td {
+    padding: 12px;
+    text-align: left;
+    border: 1px solid var(--light-blue);
+}
+
+.table th {
+    background-color: var(--beige);
+    color: var(--dark-blue);
+}
+
+.table td {
+    background-color: var(--off-white);
+}
+
+.table td button {
+    padding: 8px 12px;
+    border-radius: var(--border-radius);
+    cursor: pointer;
+    font-size: 14px;
+    transition: background-color var(--transition);
+}
+
+button.approve {
+    background-color: #28a745;
+    color: white;
+    width: 100px;
+    padding: 5px 10px;
+}
+
+button.reject {
+    background-color: #dc3545;
+    color: white;
+    width: 100px;
+    padding: 5px 10px;
+}
+
+button.approve:hover {
+    background-color: #218838;
+}
+
+button.reject:hover {
+    background-color: #c82333;
+}
+
+button:focus {
+    outline: none;
+}
+
+/* Confirmation Messages */
+.message {
+    font-size: 16px;
+    padding: 10px 20px;
+    border-radius: var(--border-radius);
+    margin-top: 20px;
+}
+
+.message.success {
+    border: 2px solid #28a745;
+    color: #28a745;
+}
+
+.message.error {
+    border: 2px solid #dc3545;
+    color: #dc3545;
+}
+
+/* Dashboard Layout */
+.dashboard {
+    width: 100%;
+    min-height: 100vh;
+    background-color: var(--off-white);
+    display: flex;
+    flex-direction: row;
+    padding: 20px;
+    padding-top: 80px; /* Space for fixed navbar */
+}
+
+/* Quiz Content */
+.quiz {
+    padding: 20px;
+    background-color: var(--off-white);
+    margin-left: 20%;
+    margin: 0 auto;
+    margin-right: -30px;
+    margin-top: -80px;
+}
+
+.dashboard-quiz .quiz-score {
+    background-color: var(--light-blue);
+    color: white;
+    padding: 10px 20px;
+    border-radius: var(--border-radius);
+    margin-top: 20px;
+}
+
+/* Quiz Question */
+.question {
+    margin-bottom: 20px;
+    text-align: left;
+}
+
+button[type="submit"] {
+    margin-top: 20px;
+}
+
+/* Navbar Button Font Adjustment */
+.nav-links .btn {
+    font-size: 16px;
+}
+
+/* Mobile Optimization */
+@media (max-width: 768px) {
+    .dashboard {
+        flex-direction: column;
+    }
+    .sidebar {
+        width: 100%;
+        order: 2;
+    }
+    .quiz {
+        width: 100%;
+        order: 1;
+    }
+}
+
+/* FAQ Styles */
+.faq-container {
+    margin-top: 10px;
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 20px;
+    background-color: var(--beige);
+    border-radius: var(--border-radius);
+    box-shadow: var(--box-shadow);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+}
+
+.faq-item {
+    margin-bottom: 20px;
+    border-bottom: 1px solid var(--dark-blue);
+    padding-bottom: 10px;
+}
+
+.faq-question {
+    font-size: 18px;
+    font-weight: bold;
+    color: var(--dark-blue);
+    cursor: pointer;
+    transition: color var(--transition);
+}
+
+.faq-question:hover {
+    color: var(--light-blue);
+}
+
+.faq-answer {
+    font-size: 16px;
+    color: var(--dark-beige);
+    overflow: hidden;
+    height: 0;
+    padding-top: 0;
+    padding-bottom: 0;
+    margin-top: 5px;
+    transition: height var(--transition), padding var(--transition);
+}
+
+.faq-answer.open {
+    height: auto;
+    padding-top: 10px;
+    padding-bottom: 10px;
+}
+
+/* Results Table */
+.results-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 30px;
+    background-color: var(--off-white);
+    border-radius: var(--border-radius);
+    box-shadow: var(--box-shadow);
+}
+
+.results-table th, .results-table td {
+    padding: 12px;
+    text-align: left;
+    border: 1px solid var(--light-blue);
+}
+
+.results-table th {
+    background-color: var(--beige);
+    color: var(--dark-blue);
+}
+
+.results-table td {
+    background-color: var(--off-white);
+}
+
+.results-table td button {
+    padding: 8px 12px;
+    border-radius: var(--border-radius);
+    cursor: pointer;
+    font-size: 14px;
+    transition: background-color var(--transition);
+}
+
+/* Export Buttons */
+.export-buttons {
+    display: flex;
+    justify-content: space-between;
+    gap: 10px;
+}
+
+.export-buttons button {
+    background-color: var(--light-blue);
+    color: white;
+    padding: 12px 20px;
+    border: none;
+    border-radius: var(--border-radius);
+    font-size: 16px;
+    cursor: pointer;
+    transition: background-color var(--transition);
+    flex: 1;
+}
+
+.export-buttons button:hover {
+    background-color: var(--dark-blue);
+}
+
+.export-buttons button:focus {
+    outline: none;
+}
+
+/* Options and Labels for Questions */
+.options label {
+    display: flex;
+    flex-direction: row-reverse;
+    align-items: center;
+    margin-bottom: 10px;
+    transition: background-color var(--transition);
+    padding: 5px;
+    border-radius: var(--border-radius);
+}
+
+.options label:hover {
+    background-color: var(--beige);
+}
+
+.form-question {
+    display: flex;
+    flex-direction: row-reverse;
+    align-items: center;
+    gap: 10px;
+}
+
+.info-button {
+    display: inline-block;
+    background-color: var(--light-blue);
+    color: white;
+    border-radius: 50%;
+    padding: 10px;
+    font-size: 18px;
+    text-align: center;
+    cursor: pointer;
+    transition: background-color var(--transition);
+}
+
+.info-button:hover {
+    background-color: var(--dark-blue);
+}
+
+#info-container {
+    background-color: var(--beige);
+    border: 1px solid #ccc;
+    padding: 10px;
+    margin-top: 10px;
+    font-size: 14px;
+}
+
+/* Modal */
+.modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.7);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+}
+
+.modal-content {
+    background-color: white;
+    padding: 20px;
+    border-radius: var(--border-radius);
+    max-width: 80%;
+    max-height: 80%;
+    overflow-y: auto;
+}
+
+.close-btn {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    font-size: 20px;
+    cursor: pointer;
+}

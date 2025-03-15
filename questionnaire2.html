@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="el">
+<head>
+    <meta charset="UTF-8">
+    <title>ΚΛΙΝΙΚΗ ΑΠΟΤΕΛΕΣΜΑΤΙΚΟΤΗΤΑ</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+     <div class="container">
+        <nav class="navbar">
+            <h1 class="logo">Dashboard</h1>
+            <div class="nav-links">
+                <a href="faq.html" class="btn">Συχνές Ερωτήσεις</a>
+                <a href="chat.html" class="btn">Chat</a>
+                <a href="#" id="logoutButton" class="btn">Αποσύνδεση</a>
+            </div>
+        </nav>
+        <main class="quiz">
+            <br>
+            <br>
+            <br>
+            <br>
+            <br>             
+            <br>              
+            <h1>Κλινική Αποτελεσματικότητα <span id="info-icon" class="info-button">&#8505;</span></h1>
+            <div id="info-container" style="display: none;">
+                <br>
+                <p>Η κλινική αποτελεσματικότητα στον κλάδο της τηλε-υγείας αφορά την ικανότητα των εξ αποστάσεως υπηρεσιών υγειονομικής περίθαλψης να παρέχουν ιατρική φροντίδα που είναι συγκρίσιμη ή, σε ορισμένες περιπτώσεις, ανώτερη από την παραδοσιακή παροχή υπηρεσιών υγειονομικής περίθαλψης. Περιλαμβάνει τέσσερις υποτομείς:</p>
+                <br><p>• Την διαχείριση της περίθαλψης και της υγείας του πληθυσμού</p>
+                <br><p>• Την διαγνωστική ακρίβεια</p>
+                <br><p>• Τις επιπτώσεις στην υγεία των ασθενών</p>
+                <br><p>• Την χρήση των υπηρεσιών υγείας</p>
+            </div>
+            <form id="questionnaire2">
+                <!-- Ερώτηση 10 -->
+                <div class="question">
+                    <h2>Ετοιμότητα Εργατικού Δυναμικού</h2>
+                    <p><b>Σύμφωνα με τα παρακάτω, επιλέξτε το επίπεδο ωριμότητας που αντιστοιχεί στην υπηρεσία:</b></p>
+                    <p align="left">Οι οργανισμοί, δεν μπορούν να βασίζονται αποκλειστικά σε εθνικές προσπάθειες για την προετοιμασία και την συνεχή ενημέρωση του εργατικού δυναμικού τους. Όσο αφορά τις υπηρεσίες τηλε-υγείας, πρέπει να αναπτυχθεί και να ενδυναμωθεί το κλινικό,το διοικητικό και το τεχνικό ανθρώπινο δυναμικό. Δεδομένου ότι μεγάλο μέρος της ιατρικής και της μεταπτυχιακής εκπαίδευσης εφαρμόζεται σε ομάδες ειδικοτήτων, οι οργανισμοί χρειάζεται να αναζητήσουν τρόπους να εναρμονίσουν την εν λόγω εξειδικευμένη εκπαίδευση με τη γενική ανάπτυξη ικανοτήτων ως απαραίτητη για την ορθή πρακτική στις υπηρεσίες τηλε-υγείας. Τα πρότυπα αυτής της πρακτικής πρέπει να καθοριστούν από τον οργανισμό σε συνάρτηση με την εθνική καθοδήγηση και το επαγγελματικό εκπαιδευτικό ήθος. Η κατάρτιση θα πρέπει να διασφαλίζει ότι οι επαγγελματίες διαθέτουν τις κλινικές γνώσεις που απαιτούνται για την παροχή υπηρεσιών τηλε-υγείας. Επιπλέον, είναι απαραίτητη η διασφάλιση ενός σχεδίου ετοιμότητας του εργατικού δυναμικού στον οργανισμό. Τέλος, οι οργανισμοί πρέπει να διαθέτουν ένα μηχανισμό αξιολόγησης της ετοιμότητας του εργατικού δυναμικού. Οι οργανισμοί μπορούν να αντλήσουν καθοδήγηση για τις διαδικασίες ποιότητας που εφαρμόζουν από τις κατευθυντήριες γραμμές ISO 13131:2021[9.1.2].</p>
+                    <label><input type="radio" name="question10" value="1" required>Δεν υπάρχει σχέδιο ανάπτυξης του εργατικού δυναμικού.</label><br>
+                    <label><input type="radio" name="question10" value="2" required>Υπάρχει ένα γενικό σχέδιο ανάπτυξης του εργατικού δυναμικού, το οποίο περιλαμβάνει συγκεκριμένες πτυχές που αφορούν την τεχνολογία πληροφοριών και επικοινωνιών, καθώς και την ψηφιακή υγεία.</label><br>
+                    <label><input type="radio" name="question10" value="3" required>Υπάρχει σχέδιο ανάπτυξης του εργατικού δυναμικού, το οποίο περιλαμβάνει σαφώς καθορισμένους στόχους και δραστηριότητες που αφορούν την τηλε-υγεία, ακολουθώντας τις υφιστάμενες υπερ-οργανωτικές κατευθυντήριες οδηγίες.</label><br>
+                    <label><input type="radio" name="question10" value="4" required>Η κατάρτιση σε θέματα τηλε-υγείας διεξάγεται σε τακτική βάση για όλο το προσωπικό που συμμετέχει στις υπηρεσίες τηλε-υγείας, με ιδιαίτερη έμφαση στην ποιότητα και την αξιοπιστία από την πλευρά των επαγγελματιών υγείας.</label><br>
+                    <label><input type="radio" name="question10" value="5" required>Η διασφάλιση της ποιότητας μιας κατάλληλης και προσαρμοσμένης κατάρτισης σε θέματα τηλε-υγείας για τους επαγγελματίες υγείας υπάρχει και ακολουθεί τις εθνικές προδιαγραφές.</label><br>
+                </div>
+
+                <!-- Ερώτηση 11 -->
+                <div class="question">
+                    <h2>Διαγνωστική Ακρίβεια</h2>
+                    <p><b>Σύμφωνα με τα παρακάτω, επιλέξτε το επίπεδο ωριμότητας που αντιστοιχεί στην υπηρεσία:</b></p>
+                    <p align="left">Ο οργανισμός ακολουθεί τις υπάρχουσες οδηγίες σχετικά με τον τρόπο λήψης δεδομένων και αξιολόγησης της διαγνωστικής ακρίβειας της τηλε-υγείας. Χρησιμοποιεί μικρά ή μεγάλα σύνολα συλλεγόμενων δεδομένων σχετικά με τη διαγνωστική ακρίβεια για να αξιολογήσεικαι να βελτιώσει τις υπηρεσίες του.</p>
+                    <label><input type="radio" name="question11" value="1" required>Δεν πραγματοποιείται καμία μέτρηση της διαγνωστικής ακρίβειας της τηλε-υγείας.</label><br>
+                    <label><input type="radio" name="question11" value="2" required>Η διαγνωστική ακρίβεια της τηλε-υγείας αναλύεται σε ερευνητικά ή πιλοτικά πλαίσια.</label><br>
+                    <label><input type="radio" name="question11" value="3" required>Παράγονται στοιχεία διασποράς σχετικά με τη διαγνωστική ακρίβεια των υπηρεσιών τηλε-υγείας.</label><br>
+                    <label><input type="radio" name="question11" value="4" required>Σχεδόν για όλες τις υπηρεσίες διατίθενται στοιχεία για τη διαγνωστική ακρίβεια.</label><br>
+                    <label><input type="radio" name="question11" value="5" required>Συστηματικά στοιχεία σχετικά με τη διαγνωστική ακρίβεια της τηλε-υγείας συλλέγονται τακτικά και ακολουθούν εθνικές ή περιφερειακές κατευθυντήριες οδηγίες.</label><br>
+                </div>  
+                
+                <!-- Ερώτηση 12 -->
+                <div class="question">
+                    <h2>Επιπτώσεις στη Θνησιμότητα, στη Νοσηρότητα και στην HRQoL, καθώς και στις Συνήθειες - Συμπεριφορές</h2>
+                    <p><b>Σύμφωνα με τα παρακάτω, επιλέξτε το επίπεδο ωριμότητας που αντιστοιχεί στην υπηρεσία:</b></p>
+                    <p align="left">Οι οργανισμοί υγειονομικής περίθαλψης που παρέχουν υπηρεσίες τηλεϊατρικής πρέπει να εξετάσουν τον τρόπο εκτίμησης των επιπτώσεων των υπηρεσιών αυτών στη θνησιμότητα, τη νοσηρότητα και την ποιότητα ζωής του ανθρώπου, ενδεχομένως στο πλαίσιο παρόμοιων επιπτώσεων από άλλες καινοτόμες διαδικασίες που εισάγονται ή/και στο πλαίσιο τακτικής αξιολόγησης των συνολικών υπηρεσιών που παρέχουν. Εφόσον είναι δυνατόν, η μέτρηση αυτή πρέπει να ακολουθεί εθνικές ή περιφερειακές οδηγίες και να αποτελεί συστηματική διαδικασία συλλογής και αξιολόγησης στοιχείων. Τα συμπεράσματα και οι βελτιώσεις θα πρέπει φυσικά να ακολουθούν τις μετρήσεις αυτές</p>
+                    <label><input type="radio" name="question12" value="1" required>Δεν πραγματοποιείται μέτρηση των επιπτώσεων της τηλε-υγείας.</label><br>
+                    <label><input type="radio" name="question12" value="2" required>Οι επιπτώσεις των υπηρεσιών τηλεϊατρικής μελετώνται περιστασιακά σε ερευνητικά ή πιλοτικά πλαίσια ή με έναν ad-hoc, μη συστηματικό τρόπο</label><br>
+                    <label><input type="radio" name="question12" value="3" required>Στοιχεία για τις επιπτώσεις της τηλε-υγείας συλλέγονται για ορισμένες υπηρεσίες με ακανόνιστο τρόπο, αλλά ακολουθούν τις εθνικές ή τις διεθνείς κατευθυντήριες γραμμές όταν δεν υπάρχουν εθνικές κατευθυντήριες γραμμές.</label><br>
+                    <label><input type="radio" name="question12" value="4" required>Στοιχεία λαμβάνονται για τουλαχιστόν το 90% των υπηρεσιών και με καθορισμένο τρόπο σύμφωνα με τις εθνικές οδηγίες.</label><br>
+                    <label><input type="radio" name="question12" value="5" required>Στοιχεία συλλέγονται συστηματικά για όλες τις υπηρεσίες, ακολουθούν τις εθνικές ή περιφερειακές οδηγίες, αναλύονται και διαμορφώνεται επίσημα ένα σχέδιο βελτίωσης.</label><br>
+                </div> 
+
+                <!-- Ερώτηση 13 -->
+                <div class="question">
+                    <h2>Χρήση Υπηρεσιών Υγείας</h2>
+                    <p><b>Σύμφωνα με τα παρακάτω, επιλέξτε το επίπεδο ωριμότητας που αντιστοιχεί στην υπηρεσία:</b></p>
+                    <p align="left">Οι οργανισμοί είναι υποχρεωμένοι να υπολογίζουν και να αναφέρουν διάφορα στατιστικά στοιχεία σχετικά με τις υπηρεσίες που παρέχουν σε εθνικό και περιφερειακό επίπεδο. Οι περισσότερες χώρες έχουν καθορίσει σύνολα δεδομένων που πρέπει να αναφέρονται και έχουν θεσπίσει μηχανισμούς. Ακόμα και όταν αυτό δεν συμβαίνει, οι οργανισμοί μπορούν να αξιολογούν τη χρήση των υπηρεσιών. Η εφαρμογή αυτών των διαδικασιών στις υπηρεσίες τηλε-υγείας εξαρτάται από τις εθνικές οδηγίες και μπορεί να περιλαμβάνει ιδιαιτερότητες που πρέπει να τηρούνται.</p>
+                    <label><input type="radio" name="question13" value="1" required>Δεν πραγματοποιείται συστηματική μέτρηση της χρήσης των υπηρεσιών.</label><br>
+                    <label><input type="radio" name="question13" value="2" required>Ο οργανισμός ακολουθεί την εθνική καθοδήγηση για τη μέτρηση της χρήσης των υπηρεσιών, αλλά δεν παράγονται συγκεκριμένα στατιστικά στοιχεία για τις υπηρεσίες τηλε-υγείας.</label><br>
+                    <label><input type="radio" name="question13" value="3" required>Παράγονται μέτρα διασποράς, τα οποία αφορούν τη χρήση υπηρεσιών τηλε-υγείας και σχετίζονται με άλλα πρότυπα χρήσης υπηρεσιών.</label><br>
+                    <label><input type="radio" name="question13" value="4" required>Τα στοιχεία σχετικά με τη χρήση των υπηρεσιών τηλε-υγείας προέρχονται από το 90% των υπηρεσιών και σχέτιζονται με άλλα πρότυπα χρήσης υπηρεσιών.</label><br>
+                    <label><input type="radio" name="question13" value="5" required>Η συστηματική καταγραφή των επιπτώσεων της παροχής τηλε-υγείας στη χρήση άλλων υπηρεσιών ακολουθεί την εθνική καθοδήγηση και αναφέρεται σε εθνικό επίπεδο.</label><br>
+                </div> 
+
+                <button type="submit" onclick="return calculateScore(event);" class="btn primary">Υποβολή</button>
+            </form>
+                <div  id="displayResults"></div>
+        </main>
+    </div>
+<!--   <script> 
+      document.getElementById('info-icon').onclick = function() {
+            var infoContainer = document.getElementById('info-container');
+            if (infoContainer.style.display === 'none') {
+                infoContainer.style.display = 'block';
+            } else {
+                infoContainer.style.display = 'none';
+            }
+        };
+
+        // Βρίσκουμε το κουίζ και το κουμπί υποβολής
+        const form = document.getElementById('questionnaire2');
+        const resultContainer = document.createElement('div');
+        resultContainer.setAttribute('id', 'displayResults');
+        form.appendChild(resultContainer); 
+
+        // Λειτουργία για να υπολογίσουμε το σκορ
+        function calculateScore() {
+
+            let totalScore = 0;
+            const answers = [];
+            // Περνάμε από όλες τις ερωτήσεις
+            const questions = form.querySelectorAll('.question');
+
+            questions.forEach(question => {
+                const selectedOption = question.querySelector('input[type="radio"]:checked');
+
+                if (selectedOption) {
+                    totalScore += parseInt(selectedOption.value);
+                    answers.push(selectedOption.parentElement.textContent.trim());
+                }
+            });
+            
+             // Αποθηκεύουμε το σκορ στο localStorage
+            localStorage.setItem('score2', totalScore);
+            localStorage.setItem('answers2', JSON.stringify(answers));
+
+            // Εμφάνιση του συνολικού σκορ
+            resultContainer.innerHTML = `<h3>Το σκορ σας είναι: ${totalScore}</h3>`;
+            resultContainer.style.display = 'block';
+            return totalScore;
+        }
+
+        // Προσθέτουμε το event listener για το κουμπί υποβολής
+        form.addEventListener('submit', function(event) {
+            event.preventDefault(); // Αποτρέπουμε την υποβολή της φόρμας
+            const score = calculateScore(); // Υπολογισμός σκορ
+
+            //Εμφάνιση alert με το σκορ
+            alert('Το σκορ σας είναι: ' + score);
+
+            setTimeout(function() {
+                // Ανακατεύθυνση στο δεύτερο ερωτηματολόγιο
+                 window.location.href = 'questionnaire3.html';  // Αντικαταστήστε με τη διεύθυνση του δεύτερου ερωτηματολογίου
+            }, 1500);
+        });        
+    </script>--> 
+ 
+    <script>
+        document.getElementById('info-icon').onclick = function() {
+            var infoContainer = document.getElementById('info-container');
+            if (infoContainer.style.display === 'none') {
+                infoContainer.style.display = 'block';
+            } else {
+                infoContainer.style.display = 'none';
+            }
+        };
+    
+        // Βεβαιωνόμαστε ότι ο χρήστης έχει συνδεθεί μέσω Firebase Authentication
+        firebase.auth().onAuthStateChanged(function(user) {
+            if (!user) {
+                alert("Δεν υπάρχει ενεργός χρήστης! Παρακαλώ συνδεθείτε.");
+                window.location.href = "index.html"; // Αν δεν υπάρχει χρήστης, επιστροφή στη σελίδα login
+            }
+    
+            // Ο χρήστης είναι συνδεδεμένος, μπορούμε να συνεχίσουμε
+            const username = user.email;  // Παίρνουμε το email του χρήστη (μπορείς να το προσαρμόσεις αν χρησιμοποιείς άλλο πεδίο)
+    
+            // Επιλογή της φόρμας
+            const form = document.getElementById('questionnaire2');
+            const resultContainer = document.createElement('div');
+            resultContainer.setAttribute('id', 'displayResults');
+            form.appendChild(resultContainer);
+    
+            // Λειτουργία για να υπολογίσουμε το σκορ
+            function calculateScore() {
+                let totalScore = 0;
+                const answers = [];
+                // Περνάμε από όλες τις ερωτήσεις
+                const questions = form.querySelectorAll('.question');
+    
+                questions.forEach(question => {
+                    const selectedOption = question.querySelector('input[type="radio"]:checked');
+    
+                    if (selectedOption) {
+                        totalScore += parseInt(selectedOption.value);
+                        answers.push(selectedOption.parentElement.textContent.trim());
+                    }
+                });
+                
+                // Αποθηκεύουμε το σκορ και τις απαντήσεις στο Firebase
+                const scoreData = {
+                    score: totalScore,
+                    answers: answers,
+                    username: username,
+                    timestamp: new Date().toISOString()  // Αποθήκευση ημερομηνίας
+                };
+    
+                // Αποθήκευση στο Firebase Database
+                const scoreRef = firebase.database().ref('scores');
+                scoreRef.push(scoreData);
+    
+                // Εμφάνιση του συνολικού σκορ
+                resultContainer.innerHTML = `<h3>Το σκορ σας είναι: ${totalScore}</h3>`;
+                resultContainer.style.display = 'block';
+                return totalScore;
+            }
+    
+            // Προσθέτουμε το event listener για το κουμπί υποβολής
+            form.addEventListener('submit', function(event) {
+                event.preventDefault(); // Αποτρέπουμε την υποβολή της φόρμας
+                const score = calculateScore(); // Υπολογισμός σκορ
+    
+                // Εμφάνιση alert με το σκορ
+                alert('Το σκορ σας είναι: ' + score);
+    
+                setTimeout(function() {
+                    // Ανακατεύθυνση στο τρίτο ερωτηματολόγιο
+                    window.location.href = 'questionnaire3.html';  // Αντικαταστήστε με τη διεύθυνση του τρίτου ερωτηματολογίου
+                }, 1500);
+            });
+    
+        });
+    </script>
+    <!-- Προσθήκη του Firebase SDK -->
+    <script type="module" src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js"></script>
+    <script type="module" src="https://www.gstatic.com/firebasejs/9.6.1/firebase-auth.js"></script>
+    <script type="module" src="https://www.gstatic.com/firebasejs/9.6.1/firebase-database.js"></script>       
+    <script src="script.js"></script>
+</body>
+</html>        
