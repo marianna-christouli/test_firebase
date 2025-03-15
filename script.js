@@ -33,13 +33,15 @@ document.addEventListener("DOMContentLoaded", function () {
     getDoc(adminDocRef).then(docSnapshot => {
         if (!docSnapshot.exists()) {
             // Δημιουργία admin στο Firestore
-            setDoc(doc(db, "users", "admin"), { username: adminUsername, password: adminPassword })
+            setDoc(adminDocRef, { username: adminUsername, password: adminPassword })
                 .then(() => {
                     console.log("Admin δημιουργήθηκε!");
                 })
                 .catch(error => {
                     console.error("Σφάλμα κατά τη δημιουργία του Admin: ", error);
                 });
+        } else {
+            console.log("Admin ήδη υπάρχει.");
         }
     }).catch(error => {
         console.error("Σφάλμα κατά την ανάκτηση του admin: ", error);
@@ -64,7 +66,7 @@ document.addEventListener("DOMContentLoaded", function () {
                         window.location.href = "admin.html";
                     } else {
                         // Σύνδεση με Firebase Authentication για άλλους χρήστες
-                        signInWithEmailAndPassword(auth, username + "@domain.com", password)
+                        signInWithEmailAndPassword(auth, "admin@domain.com", password) // Χρήση ψεύτικου email για admin
                             .then((userCredential) => {
                                 const user = userCredential.user;
                                 window.location.href = "instructions.html";
@@ -125,13 +127,11 @@ document.addEventListener("DOMContentLoaded", function () {
                 role: document.getElementById('role').value,
                 usageYears: document.getElementById('usageYears').value,
                 serviceName: document.getElementById('serviceName').value.trim(),
-
-                // Προσθήκη του πεδίου "status" με τιμή "Σε αναμονή"
                 status: "Σε αναμονή"  // Νέο σημείο: Ορίζουμε την αρχική κατάσταση ως "Pending"
             };
 
             // Δημιουργία χρήστη με Firebase Authentication
-            createUserWithEmailAndPassword(auth, user.email, user.password)
+            createUserWithEmailAndPassword(auth, user.email + "@domain.com", user.password) // Προσθήκη του "@domain.com"
                 .then((userCredential) => {
                     const userAuth = userCredential.user;
 
