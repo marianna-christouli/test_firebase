@@ -37,8 +37,12 @@ document.addEventListener("DOMContentLoaded", function () {
                 .then(() => {
                     console.log("Admin δημιουργήθηκε!");
                 })
-                .catch(error => console.error("Σφάλμα κατά τη δημιουργία του Admin: ", error));
+                .catch(error => {
+                    console.error("Σφάλμα κατά τη δημιουργία του Admin: ", error);
+                });
         }
+    }).catch(error => {
+        console.error("Σφάλμα κατά την ανάκτηση του admin: ", error);
     });
 
     // Διαχείριση Σύνδεσης
@@ -60,7 +64,7 @@ document.addEventListener("DOMContentLoaded", function () {
                         window.location.href = "admin.html";
                     } else {
                         // Σύνδεση με Firebase Authentication για άλλους χρήστες
-                        signInWithEmailAndPassword(auth, username, password)
+                        signInWithEmailAndPassword(auth, username + "@domain.com", password)
                             .then((userCredential) => {
                                 const user = userCredential.user;
                                 window.location.href = "instructions.html";
@@ -70,6 +74,8 @@ document.addEventListener("DOMContentLoaded", function () {
                             });
                     }
                 }
+            }).catch(error => {
+                console.error("Σφάλμα κατά την ανάκτηση του admin: ", error);
             });
         });
     }
@@ -137,10 +143,12 @@ document.addEventListener("DOMContentLoaded", function () {
                         })
                         .catch((error) => {
                             console.error("Σφάλμα κατά την αποθήκευση του χρήστη: ", error);
+                            alert("Σφάλμα κατά την αποθήκευση του χρήστη στο Firestore.");
                         });
                 })
                 .catch((error) => {
-                    alert(error.message);
+                    console.error("Σφάλμα κατά τη δημιουργία χρήστη: ", error);
+                    alert(error.message);  // Προβολή πιο συγκεκριμένου σφάλματος
                 });
         });
     }
@@ -199,6 +207,8 @@ document.addEventListener("DOMContentLoaded", function () {
                 `;
                 userListContainer.appendChild(row);
             });
+        }).catch(error => {
+            console.error("Σφάλμα κατά τη φόρτωση των χρηστών: ", error);
         });
     }
 
