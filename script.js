@@ -1,11 +1,10 @@
 // Import the functions you need from the SDKs you need
 import { initializeApp } from "firebase/app";
 import { getAnalytics } from "firebase/analytics";
-// TODO: Add SDKs for Firebase products that you want to use
-// https://firebase.google.com/docs/web/setup#available-libraries
+import { getFirestore, doc, getDoc, setDoc, collection, addDoc, getDocs, updateDoc } from "firebase/firestore";
+import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, signOut } from "firebase/auth";
 
 // Your web app's Firebase configuration
-// For Firebase JS SDK v7.20.0 and later, measurementId is optional
 const firebaseConfig = {
   apiKey: "AIzaSyCOBcZaGNGLIT-xv_YA-41bY8m62nU_Udg",
   authDomain: "tqoct-thesis.firebaseapp.com",
@@ -19,6 +18,8 @@ const firebaseConfig = {
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);
 const analytics = getAnalytics(app);
+const auth = getAuth(app); // Firebase Authentication
+const db = getFirestore(app); // Firestore
 
 document.addEventListener("DOMContentLoaded", function () {
     const registerForm = document.getElementById("registerForm");
@@ -32,7 +33,7 @@ document.addEventListener("DOMContentLoaded", function () {
     getDoc(adminDocRef).then(docSnapshot => {
         if (!docSnapshot.exists()) {
             // Δημιουργία admin στο Firestore
-            setDoc(collection(db, "users"), { username: adminUsername, password: adminPassword })
+            setDoc(doc(db, "users", "admin"), { username: adminUsername, password: adminPassword })
                 .then(() => {
                     console.log("Admin δημιουργήθηκε!");
                 })
@@ -49,27 +50,25 @@ document.addEventListener("DOMContentLoaded", function () {
             const password = document.getElementById("loginPassword").value.trim();
 
             // Έλεγχος για τη σύνδεση του admin από Firestore
-            getDocs(adminDocRef).then(snapshot => {
-                const adminData = snapshot.docs.map(doc => doc.data())[0];
-                if (username === adminData.username && password === adminData.password) {
-                    // Admin σύνδεση
-                    signInWithEmailAndPassword(auth, username, password)
-                        .then(() => {
-                            window.location.href = "admin.html";
-                        })
-                        .catch(error => {
-                            alert("Λάθος όνομα χρήστη ή κωδικός πρόσβασης!");
-                        });
-                } else {
-                    // Σύνδεση με Firebase Authentication
-                    signInWithEmailAndPassword(auth, username, password)
-                        .then((userCredential) => {
-                            const user = userCredential.user;
-                            window.location.href = "instructions.html";
-                        })
-                        .catch((error) => {
-                            alert("Λάθος όνομα χρήστη ή κωδικός πρόσβασης!");
-                        });
+            const adminDocRef = doc(db, "users", "admin");
+            getDoc(adminDocRef).then(docSnapshot => {
+                if (docSnapshot.exists()) {
+                    const adminData = docSnapshot.data();
+
+                    if (username === adminData.username && password === adminData.password) {
+                        // Admin σύνδεση (ανακατεύθυνση στο admin panel)
+                        window.location.href = "admin.html";
+                    } else {
+                        // Σύνδεση με Firebase Authentication για άλλους χρήστες
+                        signInWithEmailAndPassword(auth, username, password)
+                            .then((userCredential) => {
+                                const user = userCredential.user;
+                                window.location.href = "instructions.html";
+                            })
+                            .catch((error) => {
+                                alert("Λάθος όνομα χρήστη ή κωδικός πρόσβασης!");
+                            });
+                    }
                 }
             });
         });
