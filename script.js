@@ -28,11 +28,11 @@ document.addEventListener("DOMContentLoaded", function () {
     const adminPassword = "Admin123!";
 
     // Δημιουργία του Admin αν δεν υπάρχει ήδη στο Firestore
-    const adminDocRef = doc(db, "admins", "admin");
+    const adminDocRef = doc(db, "users", "admin");
     getDoc(adminDocRef).then(docSnapshot => {
         if (!docSnapshot.exists()) {
             // Δημιουργία admin στο Firestore
-            setDoc(collection(db, "admins"), { username: adminUsername, password: adminPassword })
+            setDoc(collection(db, "users"), { username: adminUsername, password: adminPassword })
                 .then(() => {
                     console.log("Admin δημιουργήθηκε!");
                 })
