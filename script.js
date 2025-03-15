@@ -40,8 +40,6 @@ document.addEventListener("DOMContentLoaded", function () {
                 .catch(error => {
                     console.error("Σφάλμα κατά τη δημιουργία του Admin: ", error);
                 });
-        } else {
-            console.log("Admin ήδη υπάρχει.");
         }
     }).catch(error => {
         console.error("Σφάλμα κατά την ανάκτηση του admin: ", error);
@@ -66,7 +64,7 @@ document.addEventListener("DOMContentLoaded", function () {
                         window.location.href = "admin.html";
                     } else {
                         // Σύνδεση με Firebase Authentication για άλλους χρήστες
-                        signInWithEmailAndPassword(auth, "admin@domain.com", password) // Χρήση ψεύτικου email για admin
+                        signInWithEmailAndPassword(auth, username + "@domain.com", password)
                             .then((userCredential) => {
                                 const user = userCredential.user;
                                 window.location.href = "instructions.html";
@@ -75,9 +73,12 @@ document.addEventListener("DOMContentLoaded", function () {
                                 alert("Λάθος όνομα χρήστη ή κωδικός πρόσβασης!");
                             });
                     }
+                } else {
+                    alert("Δεν υπάρχει καταχωρημένος admin.");
                 }
             }).catch(error => {
                 console.error("Σφάλμα κατά την ανάκτηση του admin: ", error);
+                alert("Σφάλμα κατά την ανάκτηση του admin.");
             });
         });
     }
@@ -127,11 +128,13 @@ document.addEventListener("DOMContentLoaded", function () {
                 role: document.getElementById('role').value,
                 usageYears: document.getElementById('usageYears').value,
                 serviceName: document.getElementById('serviceName').value.trim(),
+
+                // Προσθήκη του πεδίου "status" με τιμή "Σε αναμονή"
                 status: "Σε αναμονή"  // Νέο σημείο: Ορίζουμε την αρχική κατάσταση ως "Pending"
             };
 
             // Δημιουργία χρήστη με Firebase Authentication
-            createUserWithEmailAndPassword(auth, user.email + "@domain.com", user.password) // Προσθήκη του "@domain.com"
+            createUserWithEmailAndPassword(auth, user.email, user.password)
                 .then((userCredential) => {
                     const userAuth = userCredential.user;
 
@@ -201,41 +204,34 @@ document.addEventListener("DOMContentLoaded", function () {
                     <td>${user.email}</td>
                     <td>${user.status || "Σε αναμονή"}</td>
                     <td>
-                        <button class="approve" id="approve-${index}" onclick="approveUser('${doc.id}')" ${isDisabled ? "disabled" : ""}>Έγκριση</button>
-                        <button class="reject" id="reject-${index}" onclick="rejectUser('${doc.id}')" ${isDisabled ? "disabled" : ""}>Απόρριψη</button>
+                        <button class="approve-btn" ${isDisabled ? "disabled" : ""}>Έγκριση</button>
+                        <button class="reject-btn" ${isDisabled ? "disabled" : ""}>Αρνηση</button>
                     </td>
                 `;
                 userListContainer.appendChild(row);
+
+                // Έγκριση ή απόρριψη
+                row.querySelector(".approve-btn").addEventListener("click", () => updateStatus(doc.id, "approved"));
+                row.querySelector(".reject-btn").addEventListener("click", () => updateStatus(doc.id, "rejected"));
             });
-        }).catch(error => {
-            console.error("Σφάλμα κατά τη φόρτωση των χρηστών: ", error);
         });
     }
 
-    loadUsers();
-
-    // Έγκριση χρήστη
-    function approveUser(userId) {
-        updateDoc(doc(db, "users", userId), { status: "approved" })
+    // Ενημέρωση κατάστασης χρήστη
+    function updateStatus(userId, status) {
+        const userRef = doc(db, "users", userId);
+        updateDoc(userRef, { status })
             .then(() => {
-                alert("Ο χρήστης εγκρίθηκε!");
-                loadUsers();
-            }).catch((error) => {
-                console.error("Σφάλμα κατά την έγκριση χρήστη: ", error);
+                console.log(`Κατάσταση χρήστη ενημερώθηκε σε: ${status}`);
+                loadUsers();  // Επαναφόρτωση χρηστών
+            })
+            .catch((error) => {
+                console.error("Σφάλμα κατά την ενημέρωση κατάστασης: ", error);
             });
     }
 
-    // Απόρριψη χρήστη
-    function rejectUser(userId) {
-        updateDoc(doc(db, "users", userId), { status: "rejected" })
-            .then(() => {
-                alert("Ο χρήστης απορρίφθηκε!");
-                loadUsers();
-            }).catch((error) => {
-                console.error("Σφάλμα κατά την απόρριψη χρήστη: ", error);
-            });
+    // Φορτώνουμε τους χρήστες στην αρχή
+    if (document.getElementById("adminPage")) {
+        loadUsers();
     }
-
-    window.approveUser = approveUser;
-    window.rejectUser = rejectUser;
 });
