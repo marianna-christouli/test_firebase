@@ -1,3 +1,4 @@
+
 // Εισαγωγή των λειτουργιών που χρειάζεστε από το Firebase
 import { initializeApp } from "firebase/app";
 import { getAnalytics } from "firebase/analytics";
@@ -20,23 +21,25 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const analytics = getAnalytics(app);
 const auth = getAuth(app);
-const db = getDatabase(app);  // Χρησιμοποιούμε το Realtime Database
+const db = getDatabase(app);  // Χρησιμοποιούμε το Realtime Database 
 
-// Σύνδεση Admin
-const adminUsername = "admin";
-const adminPassword = "Admin123!";
-
-const adminRef = ref(db, 'users/admin');
-get(adminRef).then((snapshot) => {
-    if (!snapshot.exists()) {
-        set(adminRef, { username: adminUsername, password: adminPassword })
-            .then(() => console.log("Admin δημιουργήθηκε!"))
-            .catch(error => console.error("Σφάλμα κατά τη δημιουργία του Admin: ", error));
-    }
-});
 
 // Διαχείριση Σύνδεσης
 document.addEventListener("DOMContentLoaded", function () {
+
+    // Σύνδεση Admin
+    const adminUsername = "admin";
+    const adminPassword = "Admin123!";
+
+    const adminRef = ref(db, 'users/admin');
+    get(adminRef).then((snapshot) => {
+        if (!snapshot.exists()) {
+            set(adminRef, { username: adminUsername, password: adminPassword })
+                .then(() => console.log("Admin δημιουργήθηκε!"))
+                .catch(error => console.error("Σφάλμα κατά τη δημιουργία του Admin: ", error));
+        }
+    });      
+
     const registerForm = document.getElementById("registerForm");
     const loginForm = document.getElementById("loginForm");
 
