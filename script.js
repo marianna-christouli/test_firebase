@@ -1,13 +1,14 @@
-// Import the functions you need from the SDKs you need
+// Εισαγωγή των λειτουργιών που χρειάζεστε από το Firebase
 import { initializeApp } from "firebase/app";
 import { getAnalytics } from "firebase/analytics";
-import { getFirestore, doc, getDoc, setDoc, collection, addDoc, getDocs, updateDoc } from "firebase/firestore";
+import { getDatabase, ref, get, set, update, child } from "firebase/database";  // Χρήση Realtime Database
 import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, signOut } from "firebase/auth";
 
-// Firebase configuration
+// Firebase Configuration
 const firebaseConfig = {
   apiKey: "AIzaSyCOBcZaGNGLIT-xv_YA-41bY8m62nU_Udg",
   authDomain: "tqoct-thesis.firebaseapp.com",
+  databaseURL: "https://tqoct-thesis-default-rtdb.firebaseio.com",  // Σύνδεση στο Realtime Database
   projectId: "tqoct-thesis",
   storageBucket: "tqoct-thesis.firebasestorage.app",
   messagingSenderId: "1080065673931",
@@ -15,20 +16,20 @@ const firebaseConfig = {
   measurementId: "G-L6YZ1ZSPQM"
 };
 
-// Initialize Firebase
+// Αρχικοποίηση Firebase
 const app = initializeApp(firebaseConfig);
 const analytics = getAnalytics(app);
 const auth = getAuth(app);
-const db = getFirestore(app);
+const db = getDatabase(app);  // Χρησιμοποιούμε το Realtime Database
 
-// Σύνδεση admin
+// Σύνδεση Admin
 const adminUsername = "admin";
 const adminPassword = "Admin123!";
 
-const adminDocRef = doc(db, "users", "admin");
-getDoc(adminDocRef).then(docSnapshot => {
-    if (!docSnapshot.exists()) {
-        setDoc(adminDocRef, { username: adminUsername, password: adminPassword })
+const adminRef = ref(db, 'users/admin');
+get(adminRef).then((snapshot) => {
+    if (!snapshot.exists()) {
+        set(adminRef, { username: adminUsername, password: adminPassword })
             .then(() => console.log("Admin δημιουργήθηκε!"))
             .catch(error => console.error("Σφάλμα κατά τη δημιουργία του Admin: ", error));
     }
@@ -47,11 +48,11 @@ document.addEventListener("DOMContentLoaded", function () {
             const password = document.getElementById("loginPassword").value.trim();
 
             try {
-                const userDocRef = doc(db, "users", username);
-                const userDoc = await getDoc(userDocRef);
+                const userRef = ref(db, `users/${username}`);
+                const userSnapshot = await get(userRef);
 
-                if (userDoc.exists()) {
-                    const userData = userDoc.data();
+                if (userSnapshot.exists()) {
+                    const userData = userSnapshot.val();
 
                     if (username === "admin" && password === userData.password) {
                         window.location.href = "admin.html";
@@ -111,7 +112,8 @@ document.addEventListener("DOMContentLoaded", function () {
 
             try {
                 await createUserWithEmailAndPassword(auth, user.email, user.password);
-                await setDoc(doc(db, "users", user.username), user);
+                // Αποθήκευση του χρήστη στο Realtime Database
+                await set(ref(db, `users/${user.username}`), user);
                 alert("Η εγγραφή σας καταχωρήθηκε! Περιμένετε έγκριση από τον διαχειριστή.");
                 registerForm.reset();
             } catch (error) {
@@ -135,11 +137,177 @@ document.addEventListener("DOMContentLoaded", function () {
         return /^(?=.*[A-Z])(?=.*\d)(?=.*[\W_]).{8,}$/.test(password);
     }
 
+    // Συνάρτηση για την αποσύνδεση
     const logoutButton = document.getElementById("logoutButton");
     if (logoutButton) {
         logoutButton.addEventListener("click", () => {
-            signOut(auth).then(() => window.location.href = "index.html")
-                .catch(error => console.error("Σφάλμα κατά την αποσύνδεση: ", error));
+            // Αποσύνδεση από Firebase Authentication
+            signOut(auth).then(() => {
+                // Καθαρισμός των στοιχείων σύνδεσης
+                sessionStorage.removeItem("loggedIn");
+                localStorage.removeItem("loggedIn");
+
+                // Ανακατεύθυνση στην αρχική σελίδα
+                window.location.href = "index.html";
+            }).catch(error => {
+                console.error("Σφάλμα κατά την αποσύνδεση: ", error);
+            });
         });
+    }
+
+    // Συνάρτηση για έλεγχο αν το όνομα χρήστη είναι ήδη καταχωρημένο στο Firebase Realtime Database
+    function isUsernameTaken(username) {
+        const usersRef = ref(db, 'users'); // Αναφορά στους χρήστες στο Realtime Database
+        return get(usersRef).then(snapshot => {
+            if (snapshot.exists()) {
+                const users = snapshot.val();
+                return Object.keys(users).some(userId => users[userId].username === username);
+            }
+            return false;
+        });
+    }
+
+    // Φόρτωμα χρηστών στο Admin Panel από Firebase Realtime Database
+    function loadUsers() {
+        const usersRef = ref(db, 'users');
+        get(usersRef).then(snapshot => {
+            const userListContainer = document.getElementById("users");
+            userListContainer.innerHTML = "";  // Καθαρίζουμε τα προηγούμενα δεδομένα
+
+            if (snapshot.exists()) {
+                const users = snapshot.val();
+                Object.keys(users).forEach((userId, index) => {
+                    const user = users[userId];
+                    const isDisabled = user.status === "approved" || user.status === "rejected";
+                    const row = document.createElement("tr");
+                    row.innerHTML = `
+                        <td>${user.username}</td>
+                        <td>${user.email}</td>
+                        <td>${user.status || "Σε αναμονή"}</td>
+                        <td>
+                            <button class="approve" id="approve-${index}" onclick="approveUser('${userId}')" ${isDisabled ? "disabled" : ""}>Έγκριση</button>
+                            <button class="reject" id="reject-${index}" onclick="rejectUser('${userId}')" ${isDisabled ? "disabled" : ""}>Απόρριψη</button>
+                        </td>
+                    `;
+                    userListContainer.appendChild(row);
+                });
+            } else {
+                userListContainer.innerHTML = "<tr><td colspan='4'>Δεν υπάρχουν χρήστες προς έγκριση.</td></tr>";
+            }
+        });
+    }
+
+    loadUsers();
+
+    // Έγκριση χρήστη
+    function approveUser(userId) {
+        const userRef = ref(db, 'users/' + userId);
+        update(userRef, { status: "approved" })
+            .then(() => {
+                alert("Ο χρήστης εγκρίθηκε!");
+                loadUsers();
+            })
+            .catch((error) => {
+                console.error("Σφάλμα κατά την έγκριση χρήστη: ", error);
+            });
+    }
+
+    // Απόρριψη χρήστη
+    function rejectUser(userId) {
+        const userRef = ref(db, 'users/' + userId);
+        update(userRef, { status: "rejected" })
+            .then(() => {
+                // Αν χρειάζεται να καταχωρήσεις τους απορριμμένους χρήστες σε άλλη θέση
+                const blockedUsersRef = ref(db, 'blockedUsers');
+                get(blockedUsersRef).then(snapshot => {
+                    let blockedUsers = snapshot.exists() ? snapshot.val() : [];
+                    blockedUsers.push(userId);
+                    set(blockedUsersRef, blockedUsers);
+                });
+                alert("Ο χρήστης απορρίφθηκε!");
+                loadUsers();
+            })
+            .catch((error) => {
+                console.error("Σφάλμα κατά την απόρριψη χρήστη: ", error);
+            });
+    }
+
+    // Συνάρτηση εξαγωγής σε CSV
+    function exportToCSV() {
+        const resultsTable = document.getElementById('resultsTable');
+        if (!resultsTable) {
+            alert("Ο πίνακας αποτελεσμάτων δεν βρέθηκε!");
+            return;
+        }       
+
+        let csvContent = "data:text/csv;charset=utf-8,";
+        
+        // Προσθήκη των επικεφαλίδων του πίνακα
+        csvContent += "ΧΡΗΣΤΗΣ,ΑΝΘΡΩΠΟΚΕΝΤΡΙΚΟΤΗΤΑ,ΚΛΙΝΙΚΗ ΑΠΟΤΕΛΕΣΜΑΤΙΚΟΤΗΤΑ,ΑΣΦΑΛΕΙΑ - ΑΠΟΡΡΗΤΟ,ΣΥΝΟΛΟ\n";
+        
+        // Προσθήκη των δεδομένων κάθε χρήστη
+        const rows = resultsTable.querySelectorAll('tr');
+        rows.forEach(row => {
+            const cols = row.querySelectorAll('td');
+            let rowData = [];
+            cols.forEach(col => rowData.push(col.innerText));
+            csvContent += rowData.join(",") + "\n";
+        });
+
+        // Δημιουργία του link για κατέβασμα του CSV
+        const encodedUri = encodeURI(csvContent);
+        const link = document.createElement("a");
+        link.setAttribute("href", encodedUri);
+        link.setAttribute("download", "results.csv");
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+    }
+
+    // Συνάρτηση εξαγωγής σε PDF
+    function exportToPDF() {
+        if (typeof jsPDF === 'undefined') {
+            alert("Το jsPDF δεν φορτώθηκε σωστά!");
+            return;
+        }
+
+        const { jsPDF } = window.jspdf;
+        const doc = new jsPDF();
+
+        let yOffset = 10;
+
+        // Εγγραφή του τίτλου
+        doc.text('Αποτελέσματα Χρηστών', 10, yOffset);
+        yOffset += 10;
+
+        const table = document.querySelector('#resultsTable');
+        if (!table) {
+            alert("Δεν βρέθηκε ο πίνακας αποτελεσμάτων!");
+            return;
+        }
+
+        const rows = table.querySelectorAll('tr');
+        if (rows.length === 0) {
+            alert("Δεν υπάρχουν δεδομένα στον πίνακα!");
+            return;
+        }
+
+        rows.forEach(row => {
+            const cols = row.querySelectorAll('td');
+            let rowText = '';
+            cols.forEach(col => {
+                rowText += col.innerText + " | ";
+            });
+
+            doc.text(rowText, 10, yOffset);
+            yOffset += 10;
+
+            if (yOffset > 280) {
+                doc.addPage();
+                yOffset = 10;
+            }
+        });
+
+        doc.save('results.pdf');
     }
 });
