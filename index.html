@@ -5,9 +5,30 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>ΑΡΧΙΚΗ</title>
     <link rel="stylesheet" href="style.css">
-    <script type="module" src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js"></script>
-    <script type="module" src="https://www.gstatic.com/firebasejs/9.6.1/firebase-auth.js"></script>
-    <script type="module" src="https://www.gstatic.com/firebasejs/9.6.1/firebase-database.js"></script>   
+    <script type="module">
+        // Import the functions you need from the SDKs you need
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.4.0/firebase-app.js";
+        import { getAnalytics } from "https://www.gstatic.com/firebasejs/11.4.0/firebase-analytics.js";
+        // TODO: Add SDKs for Firebase products that you want to use
+        // https://firebase.google.com/docs/web/setup#available-libraries
+      
+        // Your web app's Firebase configuration
+        // For Firebase JS SDK v7.20.0 and later, measurementId is optional
+        const firebaseConfig = {
+          apiKey: "AIzaSyCOBcZaGNGLIT-xv_YA-41bY8m62nU_Udg",
+          authDomain: "tqoct-thesis.firebaseapp.com",
+          databaseURL: "https://tqoct-thesis-default-rtdb.firebaseio.com",
+          projectId: "tqoct-thesis",
+          storageBucket: "tqoct-thesis.firebasestorage.app",
+          messagingSenderId: "1080065673931",
+          appId: "1:1080065673931:web:8081fd4fb4e8ad4e03a94e",
+          measurementId: "G-L6YZ1ZSPQM"
+        };
+      
+        // Initialize Firebase
+        const app = initializeApp(firebaseConfig);
+        const analytics = getAnalytics(app);
+      </script>   
 </head>
 <body>
 
