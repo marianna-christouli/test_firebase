@@ -4,30 +4,6 @@
     <meta charset="UTF-8">
     <title>AΝΘΡΩΠΟΚΕΝΤΡΙΚΟΤΗΤΑ</title>
     <link rel="stylesheet" href="style.css">
-    <script type="module">
-        // Import the functions you need from the SDKs you need
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.4.0/firebase-app.js";
-        import { getAnalytics } from "https://www.gstatic.com/firebasejs/11.4.0/firebase-analytics.js";
-        // TODO: Add SDKs for Firebase products that you want to use
-        // https://firebase.google.com/docs/web/setup#available-libraries
-      
-        // Your web app's Firebase configuration
-        // For Firebase JS SDK v7.20.0 and later, measurementId is optional
-        const firebaseConfig = {
-          apiKey: "AIzaSyCOBcZaGNGLIT-xv_YA-41bY8m62nU_Udg",
-          authDomain: "tqoct-thesis.firebaseapp.com",
-          databaseURL: "https://tqoct-thesis-default-rtdb.firebaseio.com",
-          projectId: "tqoct-thesis",
-          storageBucket: "tqoct-thesis.firebasestorage.app",
-          messagingSenderId: "1080065673931",
-          appId: "1:1080065673931:web:8081fd4fb4e8ad4e03a94e",
-          measurementId: "G-L6YZ1ZSPQM"
-        };
-      
-        // Initialize Firebase
-        const app = initializeApp(firebaseConfig);
-        const analytics = getAnalytics(app);
-      </script>    
 </head>
 <body>
      <div class="container">
@@ -171,7 +147,8 @@
             </form>
             </main>
         </div>
- <!-- <script> 
+    <script> 
+
         document.getElementById('info-icon').onclick = function() {
             var infoContainer = document.getElementById('info-container');
             if (infoContainer.style.display === 'none') {
@@ -236,82 +213,6 @@
                  window.location.href = 'questionnaire2.html';  // Αντικαταστήστε με τη διεύθυνση του δεύτερου ερωτηματολογίου
             }, 1500);
         });        
-    </script> --> 
-    <script>
-        document.getElementById('info-icon').onclick = function() {
-            var infoContainer = document.getElementById('info-container');
-            if (infoContainer.style.display === 'none') {
-                infoContainer.style.display = 'block';
-            } else {
-                infoContainer.style.display = 'none';
-            }
-        };
-    
-        // Βεβαιωνόμαστε ότι ο χρήστης έχει συνδεθεί μέσω Firebase Authentication
-        firebase.auth().onAuthStateChanged(function(user) {
-            if (!user) {
-                alert("Δεν υπάρχει ενεργός χρήστης! Παρακαλώ συνδεθείτε.");
-                window.location.href = "index.html"; // Αν δεν υπάρχει χρήστης, επιστροφή στη σελίδα login
-            }
-    
-            // Ο χρήστης είναι συνδεδεμένος, μπορούμε να συνεχίσουμε
-            const username = user.email;  // Παίρνουμε το email του χρήστη (μπορείς να το προσαρμόσεις αν χρησιμοποιείς άλλο πεδίο)
-    
-            // Επιλογή της φόρμας
-            const form = document.getElementById('questionnaire1');
-            const resultContainer = document.createElement('div');
-            resultContainer.setAttribute('id', 'displayResults');
-            form.appendChild(resultContainer);
-    
-            // Λειτουργία για να υπολογίσουμε το σκορ
-            function calculateScore() {
-                let totalScore = 0;
-                const answers = [];
-                // Περνάμε από όλες τις ερωτήσεις
-                const questions = form.querySelectorAll('.question');
-    
-                questions.forEach(question => {
-                    const selectedOption = question.querySelector('input[type="radio"]:checked');
-    
-                    if (selectedOption) {
-                        totalScore += parseInt(selectedOption.value);
-                        answers.push(selectedOption.parentElement.textContent.trim());
-                    }
-                });
-    
-                // Αποθήκευση του σκορ και των απαντήσεων στο Firebase
-                const scoreData = {
-                    score: totalScore,
-                    answers: answers,
-                    username: username,
-                    timestamp: new Date().toISOString()  // Αποθήκευση ημερομηνίας
-                };
-    
-                // Αποθήκευση στο Firebase Database
-                const scoreRef = firebase.database().ref('scores');
-                scoreRef.push(scoreData);
-    
-                // Εμφάνιση του συνολικού σκορ
-                resultContainer.innerHTML = `<h3>Το σκορ σας είναι: ${totalScore}</h3>`;
-                resultContainer.style.display = 'block';
-                return totalScore;
-            }
-    
-            // Προσθέτουμε το event listener για το κουμπί υποβολής
-            form.addEventListener('submit', function(event) {
-                event.preventDefault(); // Αποτρέπουμε την υποβολή της φόρμας
-                const score = calculateScore(); // Υπολογισμός σκορ
-    
-                // Εμφάνιση alert με το σκορ
-                alert('Το σκορ σας είναι: ' + score);
-    
-                setTimeout(function() {
-                    // Ανακατεύθυνση στο δεύτερο ερωτηματολόγιο
-                    window.location.href = 'questionnaire2.html';  // Αντικαταστήστε με τη διεύθυνση του δεύτερου ερωτηματολογίου
-                }, 1500);
-            });
-    
-        });
     </script>
     <script src="script.js"></script>
 </body>

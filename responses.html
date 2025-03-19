@@ -6,30 +6,6 @@
     <title>ΑΠΟΤΕΛΕΣΜΑΤΑ ΧΡΗΣΤΩΝ</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     <link rel="stylesheet" href="style.css">
-    <script type="module">
-        // Import the functions you need from the SDKs you need
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.4.0/firebase-app.js";
-        import { getAnalytics } from "https://www.gstatic.com/firebasejs/11.4.0/firebase-analytics.js";
-        // TODO: Add SDKs for Firebase products that you want to use
-        // https://firebase.google.com/docs/web/setup#available-libraries
-      
-        // Your web app's Firebase configuration
-        // For Firebase JS SDK v7.20.0 and later, measurementId is optional
-        const firebaseConfig = {
-          apiKey: "AIzaSyCOBcZaGNGLIT-xv_YA-41bY8m62nU_Udg",
-          authDomain: "tqoct-thesis.firebaseapp.com",
-          databaseURL: "https://tqoct-thesis-default-rtdb.firebaseio.com",
-          projectId: "tqoct-thesis",
-          storageBucket: "tqoct-thesis.firebasestorage.app",
-          messagingSenderId: "1080065673931",
-          appId: "1:1080065673931:web:8081fd4fb4e8ad4e03a94e",
-          measurementId: "G-L6YZ1ZSPQM"
-        };
-      
-        // Initialize Firebase
-        const app = initializeApp(firebaseConfig);
-        const analytics = getAnalytics(app);
-      </script>      
 </head>
 <body>
     <div class="container">
@@ -66,7 +42,7 @@
             <button onclick="exportToPDF()">Εξαγωγή σε PDF</button>
         </div>
     </div>
-<!--    <script>     
+    <script>     
 window.onload = function() {
     // Ανάκτηση των χρηστών και των σκορ τους
     const users = JSON.parse(localStorage.getItem('users')) || [];
@@ -74,21 +50,19 @@ window.onload = function() {
     const resultsTable = document.getElementById('resultsTable');
     resultsTable.innerHTML = ''; // Καθαρίζουμε τον πίνακα πριν προσθέσουμε τα δεδομένα
 
-    // Προσθήκη των χρηστών στον πίνακα αν η κατάσταση τους είναι "approved"
+    // Προσθήκη των χρηστών στον πίνακα
     users.forEach(user => {
-        if (user.status === "approved") { // Ελέγχουμε μόνο τους εγκεκριμένους χρήστες
-            const totalScore = parseInt(user.score1) + parseInt(user.score2) + parseInt(user.score3);
-            const row = document.createElement('tr');
-            row.innerHTML = `
-                <td>${user.username}</td>
-                <td>${user.score1 || 0}</td>
-                <td>${user.score2 || 0}</td>
-                <td>${user.score3 || 0}</td>
-                <td>${totalScore  || 0}</td>
-                <td><button class="view-btn" data-username="${user.username}" onclick="viewAnswers(this)">Δείτε Αποτελέσματα</button></td>
-            `;
-            resultsTable.appendChild(row);
-        }
+        const totalScore = parseInt(user.score1) + parseInt(user.score2) + parseInt(user.score3);
+        const row = document.createElement('tr');
+        row.innerHTML = `
+            <td>${user.username}</td>
+            <td>${user.score1}</td>
+            <td>${user.score2}</td>
+            <td>${user.score3}</td>
+            <td>${totalScore}</td>
+            <td><button class="view-btn" data-username="${user.username}" onclick="viewAnswers(this)">Δείτε Αποτελέσματα</button></td>
+        `;
+        resultsTable.appendChild(row);
     });
 };
 
@@ -106,6 +80,7 @@ function viewAnswers(button) {
     
     // Ανάκτηση του συνολικού σκορ του χρήστη
     const totalScore = parseInt(localStorage.getItem('score1')) + parseInt(localStorage.getItem('score2')) + parseInt(localStorage.getItem('score3'));
+
     // Δημιουργία HTML για το σκορ και τις απαντήσεις
     let answersHTML = `<h3>Απαντήσεις του χρήστη ${username}</h3>`;
     answersHTML += `<h4>Συνολικό σκορ: ${totalScore}</h4>`;
@@ -141,108 +116,7 @@ function closeModal() {
         modal.remove();
     }
 }
-    </script> -->
-    <script>
-        window.onload = function() {
-            // Ελέγχουμε αν υπάρχει ενεργός χρήστης
-            firebase.auth().onAuthStateChanged(function(user) {
-                if (!user) {
-                    alert("Δεν υπάρχει ενεργός χρήστης! Παρακαλώ συνδεθείτε.");
-                    window.location.href = "index.html"; // Αν δεν υπάρχει χρήστης, επιστροφή στη σελίδα login
-                    return;
-                }
-        
-                // Αν ο χρήστης είναι συνδεδεμένος, προχωράμε στην ανάκτηση των δεδομένων από Firebase
-                const resultsTable = document.getElementById('resultsTable');
-                resultsTable.innerHTML = ''; // Καθαρίζουμε τον πίνακα πριν προσθέσουμε τα δεδομένα
-        
-                // Ανάκτηση των χρηστών από Firebase Database
-                const usersRef = firebase.database().ref('users');
-                usersRef.once('value', function(snapshot) {
-                    const users = snapshot.val() || {};  // Λαμβάνουμε τα δεδομένα από Firebase
-        
-                    // Προσθήκη των χρηστών στον πίνακα αν η κατάσταση τους είναι "approved"
-                    for (const username in users) {
-                        const user = users[username];
-        
-                        if (user.status === "approved") { // Ελέγχουμε μόνο τους εγκεκριμένους χρήστες
-                            const totalScore = (parseInt(user.score1) || 0) + (parseInt(user.score2) || 0) + (parseInt(user.score3) || 0);
-                            const row = document.createElement('tr');
-                            row.innerHTML = `
-                                <td>${user.username}</td>
-                                <td>${user.score1 || 0}</td>
-                                <td>${user.score2 || 0}</td>
-                                <td>${user.score3 || 0}</td>
-                                <td>${totalScore || 0}</td>
-                                <td><button class="view-btn" data-username="${user.username}" onclick="viewAnswers(this)">Δείτε Αποτελέσματα</button></td>
-                            `;
-                            resultsTable.appendChild(row);
-                        }
-                    }
-                });
-            });
-        };
-        
-        // Συνάρτηση για να δείξουμε τις απαντήσεις στο modal
-        function viewAnswers(button) {
-            const username = button.getAttribute("data-username");
-        
-            if (!username) {
-                alert('Δεν υπάρχει όνομα χρήστη');
-                return;
-            }
-        
-            // Ανάκτηση των απαντήσεων του χρήστη από το Firebase
-            const userAnswersRef = firebase.database().ref('user_answers/' + username);
-            userAnswersRef.once('value', function(snapshot) {
-                const userAnswers = snapshot.val() || [];
-                
-                // Ανάκτηση του συνολικού σκορ του χρήστη από το Firebase
-                const userScoresRef = firebase.database().ref('user_scores/' + username);
-                userScoresRef.once('value', function(snapshot) {
-                    const userScores = snapshot.val() || {};
-        
-                    // Υπολογισμός του συνολικού σκορ
-                    const totalScore = (parseInt(userScores.score1) || 0) + (parseInt(userScores.score2) || 0) + (parseInt(userScores.score3) || 0);
-                    
-                    // Δημιουργία HTML για το σκορ και τις απαντήσεις
-                    let answersHTML = `<h3>Απαντήσεις του χρήστη ${username}</h3>`;
-                    answersHTML += `<h4>Συνολικό σκορ: ${totalScore}</h4>`;
-                    answersHTML += `<ul>`;
-        
-                    // Προσθήκη των απαντήσεων
-                    userAnswers.forEach((answer, index) => {
-                        answersHTML += `<li>Ερώτηση ${index + 1}: ${answer}</li>`;
-                    });
-                    answersHTML += '</ul>';
-        
-                    // Δημιουργία modal για να εμφανιστούν οι απαντήσεις
-                    const modal = document.createElement('div');
-                    modal.className = 'modal';
-                    modal.innerHTML = `
-                        <div class="modal-content">
-                            <span class="close-btn" onclick="closeModal()">X</span>
-                            <div id="answersDisplay">${answersHTML}</div>
-                        </div>
-                    `;
-        
-                    // Προσθήκη του modal στο body
-                    document.body.appendChild(modal);
-        
-                    // Άνοιγμα του modal
-                    modal.style.display = 'block';
-                });
-            });
-        }
-        
-        // Συνάρτηση για να κλείσουμε το modal
-        function closeModal() {
-            const modal = document.querySelector('.modal');
-            if (modal) {
-                modal.remove();
-            }
-        }
-    </script>   
+    </script>
     <script src="script.js"></script>
 </body>
 </html>

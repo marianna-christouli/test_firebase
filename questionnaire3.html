@@ -4,30 +4,6 @@
     <meta charset="UTF-8">
     <title>ΑΣΦΑΛΕΙΑ - ΑΠΟΡΡΗΤΟ</title>
     <link rel="stylesheet" href="style.css">
-    <script type="module">
-        // Import the functions you need from the SDKs you need
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.4.0/firebase-app.js";
-        import { getAnalytics } from "https://www.gstatic.com/firebasejs/11.4.0/firebase-analytics.js";
-        // TODO: Add SDKs for Firebase products that you want to use
-        // https://firebase.google.com/docs/web/setup#available-libraries
-      
-        // Your web app's Firebase configuration
-        // For Firebase JS SDK v7.20.0 and later, measurementId is optional
-        const firebaseConfig = {
-          apiKey: "AIzaSyCOBcZaGNGLIT-xv_YA-41bY8m62nU_Udg",
-          authDomain: "tqoct-thesis.firebaseapp.com",
-          databaseURL: "https://tqoct-thesis-default-rtdb.firebaseio.com",
-          projectId: "tqoct-thesis",
-          storageBucket: "tqoct-thesis.firebasestorage.app",
-          messagingSenderId: "1080065673931",
-          appId: "1:1080065673931:web:8081fd4fb4e8ad4e03a94e",
-          measurementId: "G-L6YZ1ZSPQM"
-        };
-      
-        // Initialize Firebase
-        const app = initializeApp(firebaseConfig);
-        const analytics = getAnalytics(app);
-      </script>
 </head>
 <body>
      <div class="container">
@@ -97,7 +73,7 @@
             <div  id="displayResults"></div>
         </main>
     </div>
-<!--    <script>       
+    <script>       
         document.getElementById('info-icon').onclick = function() {
             var infoContainer = document.getElementById('info-container');
             infoContainer.style.display = (infoContainer.style.display === 'none') ? 'block' : 'none';
@@ -190,108 +166,7 @@
              window.location.href = 'user_results.html';  
         }, 1500);
      });                    
-    </script> -->
-
-    <script>
-        document.getElementById('info-icon').onclick = function() {
-            var infoContainer = document.getElementById('info-container');
-            infoContainer.style.display = (infoContainer.style.display === 'none') ? 'block' : 'none';
-        };
-    
-        // Βεβαιωνόμαστε ότι ο χρήστης έχει συνδεθεί μέσω Firebase Authentication
-        firebase.auth().onAuthStateChanged(function(user) {
-            if (!user) {
-                alert("Δεν υπάρχει ενεργός χρήστης! Παρακαλώ συνδεθείτε.");
-                window.location.href = "index.html"; // Αν δεν υπάρχει χρήστης, επιστροφή στη σελίδα login
-            }
-    
-            // Ο χρήστης είναι συνδεδεμένος, μπορούμε να συνεχίσουμε
-            const username = user.email;  // Παίρνουμε το email του χρήστη (μπορείς να το προσαρμόσεις αν χρησιμοποιείς άλλο πεδίο)
-    
-            // Επιλογή της φόρμας
-            const form = document.getElementById('questionnaire3');
-            const resultContainer = document.createElement('div');
-            resultContainer.setAttribute('id', 'displayResults');
-            form.appendChild(resultContainer);
-    
-            // Λειτουργία για να υπολογίσουμε το σκορ
-            function calculateScore() {
-                let totalScore = 0;
-                const answers = [];
-                const questions = form.querySelectorAll('.question');
-    
-                questions.forEach(question => {
-                    const selectedOption = question.querySelector('input[type="radio"]:checked');
-    
-                    if (selectedOption) {
-                        totalScore += parseInt(selectedOption.value);
-                        answers.push(selectedOption.parentElement.textContent.trim());
-                    }
-                });
-    
-                // Αποθηκεύουμε το σκορ και τις απαντήσεις στο Firebase
-                const scoreData = {
-                    score: totalScore,
-                    answers: answers,
-                    username: username,
-                    timestamp: new Date().toISOString()  // Αποθήκευση ημερομηνίας
-                };
-    
-                // Αποθήκευση στο Firebase Database
-                const scoreRef = firebase.database().ref('scores');
-                scoreRef.push(scoreData);
-    
-                // Εμφάνιση του συνολικού σκορ
-                resultContainer.innerHTML = `<h3>Το σκορ σας είναι: ${totalScore}</h3>`;
-                resultContainer.style.display = 'block';
-    
-                return totalScore;
-            }
-    
-            // Προσθέτουμε το event listener για το κουμπί υποβολής
-            form.addEventListener('submit', function(event) {
-                event.preventDefault(); // Αποτρέπουμε την υποβολή της φόρμας
-                const score3 = calculateScore(); // Υπολογισμός σκορ
-    
-                // Εμφάνιση alert με το σκορ
-                alert('Το σκορ σας είναι: ' + score3);
-    
-                // Παίρνουμε τα σκορ και τις απαντήσεις από τα προηγούμενα ερωτηματολόγια
-                const score1 = parseInt(localStorage.getItem('score1')) || 0;
-                const score2 = parseInt(localStorage.getItem('score2')) || 0;
-    
-                const answers1 = JSON.parse(localStorage.getItem('answers1')) || [];
-                const answers2 = JSON.parse(localStorage.getItem('answers2')) || [];
-                const answers3 = JSON.parse(localStorage.getItem('answers3')) || [];
-    
-                const allAnswers = [...answers1, ...answers2, ...answers3];
-    
-                // Αποθήκευση όλων των απαντήσεων στον Firebase
-                const userAnswersRef = firebase.database().ref('user_answers/' + user.uid);
-                userAnswersRef.set({
-                    answers: allAnswers,
-                    score1: score1,
-                    score2: score2,
-                    score3: score3
-                });
-    
-                // Αποθήκευση των σκορ και των απαντήσεων του χρήστη στο Firebase Database
-                const userScoresRef = firebase.database().ref('user_scores/' + user.uid);
-                userScoresRef.set({
-                    score1: score1,
-                    score2: score2,
-                    score3: score3
-                });
-    
-                alert('Τα αποτελέσματά σας αποθηκεύτηκαν επιτυχώς!');
-    
-                setTimeout(function() {
-                    // Ανακατεύθυνση στη σελίδα αποτελεσμάτων
-                    window.location.href = 'user_results.html';
-                }, 1500);
-            });
-        });
-    </script>     
+    </script>
     <script src="script.js"></script>
 </body>
 </html>
